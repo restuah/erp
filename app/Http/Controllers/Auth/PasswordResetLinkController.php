@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
+use App\Services\ActivityLogger;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
@@ -41,6 +43,21 @@ class PasswordResetLinkController extends Controller
         );
 
         if ($status == Password::RESET_LINK_SENT) {
+            $user = User::where('email', $request->email)->first();
+            if ($user) {
+                ActivityLogger::log(
+                    description: "Permintaan reset kata sandi dikirim ke email: {$user->email}",
+                    event: 'password_reset_request',
+                    logName: 'auth',
+                    subject: $user,
+                    properties: [
+                        'email' => $user->email,
+                    ],
+                    status: 'info',
+                    causer: $user
+                );
+            }
+
             return back()->with('status', __($status));
         }
 

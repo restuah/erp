@@ -4,6 +4,7 @@ import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
+import PasswordInput from '@/Components/PasswordInput.vue';
 import TextInput from '@/Components/TextInput.vue';
 import Checkbox from '@/Components/Checkbox.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
@@ -188,10 +189,9 @@ const submit = () => {
                             for="password"
                             value="Kata Sandi Baru (Opsional)"
                         />
-                        <TextInput
+                        <PasswordInput
                             id="password"
                             v-model="form.password"
-                            type="password"
                             class="mt-1 block w-full text-sm"
                             placeholder="Biarkan kosong jika tidak ingin mengubah"
                         />
@@ -206,10 +206,9 @@ const submit = () => {
                             for="password_confirmation"
                             value="Konfirmasi Kata Sandi Baru"
                         />
-                        <TextInput
+                        <PasswordInput
                             id="password_confirmation"
                             v-model="form.password_confirmation"
-                            type="password"
                             class="mt-1 block w-full text-sm"
                             placeholder="Ulangi kata sandi baru"
                         />

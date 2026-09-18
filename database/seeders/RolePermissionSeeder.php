@@ -36,6 +36,21 @@ class RolePermissionSeeder extends Seeder
             'permissions.create',
             'permissions.edit',
             'permissions.delete',
+
+            // Activity Log management
+            'activity_logs.view',
+            'activity_logs.delete',
+
+            // Master Calendar management
+            'calendar.view',
+            'calendar.edit',
+            'calendar.sync',
+
+            // Master Currency management
+            'currencies.view',
+            'currencies.create',
+            'currencies.edit',
+            'currencies.delete',
         ];
 
         foreach ($permissions as $permission) {
@@ -63,6 +78,14 @@ class RolePermissionSeeder extends Seeder
             'users.edit',
             'roles.view',
             'permissions.view',
+            'activity_logs.view',
+            'calendar.view',
+            'calendar.edit',
+            'calendar.sync',
+            'currencies.view',
+            'currencies.create',
+            'currencies.edit',
+            'currencies.delete',
         ]);
 
         $userRole = Role::firstOrCreate([

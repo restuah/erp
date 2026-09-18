@@ -37,5 +37,8 @@ class DatabaseSeeder extends Seeder
             ]
         );
         $user->assignRole('User');
+
+        // 4. Seed Currencies
+        $this->call(CurrencySeeder::class);
     }
 }

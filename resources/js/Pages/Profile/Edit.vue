@@ -1,6 +1,7 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import DeleteUserForm from './Partials/DeleteUserForm.vue';
+import TwoFactorAuthenticationForm from './Partials/TwoFactorAuthenticationForm.vue';
 import UpdatePasswordForm from './Partials/UpdatePasswordForm.vue';
 import UpdateProfileInformationForm from './Partials/UpdateProfileInformationForm.vue';
 import { Head } from '@inertiajs/vue3';
@@ -11,6 +12,30 @@ defineProps({
     },
     status: {
         type: String,
+    },
+    pendingEmail: {
+        type: String,
+        default: null,
+    },
+    otpCooldown: {
+        type: Number,
+        default: 0,
+    },
+    twoFactorEnabled: {
+        type: Boolean,
+        default: false,
+    },
+    twoFactorConfirmedAt: {
+        type: String,
+        default: null,
+    },
+    pendingTwoFactor: {
+        type: Boolean,
+        default: false,
+    },
+    twoFactorCooldown: {
+        type: Number,
+        default: 0,
     },
 });
 </script>
@@ -35,6 +60,21 @@ defineProps({
                     <UpdateProfileInformationForm
                         :must-verify-email="mustVerifyEmail"
                         :status="status"
+                        :pending-email="pendingEmail"
+                        :otp-cooldown="otpCooldown"
+                        class="max-w-xl"
+                    />
+                </div>
+
+                <!-- Two-Factor Authentication Setting -->
+                <div
+                    class="bg-white p-4 shadow dark:bg-gray-800 sm:rounded-lg sm:p-8"
+                >
+                    <TwoFactorAuthenticationForm
+                        :two-factor-enabled="twoFactorEnabled"
+                        :two-factor-confirmed-at="twoFactorConfirmedAt"
+                        :pending-two-factor="pendingTwoFactor"
+                        :two-factor-cooldown="twoFactorCooldown"
                         class="max-w-xl"
                     />
                 </div>

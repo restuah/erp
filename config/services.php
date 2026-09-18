@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+    'tanggalmerah' => [
+        'base_url' => env('TANGGALMERAH_API_URL', 'https://tanggalmerah.upset.dev'),
+    ],
+
 ];

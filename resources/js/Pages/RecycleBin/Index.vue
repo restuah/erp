@@ -296,6 +296,43 @@ const executeEmptyTrash = () => {
                             {{ counts.permissions }}
                         </span>
                     </button>
+
+                    <button
+                        type="button"
+                        @click="switchTab('currencies')"
+                        class="group inline-flex items-center gap-2 border-b-2 px-1 py-3 text-sm font-medium transition-colors"
+                        :class="
+                            activeTab === 'currencies'
+                                ? 'border-indigo-600 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400'
+                                : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
+                        "
+                    >
+                        <svg
+                            class="h-4 w-4"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                            />
+                        </svg>
+                        Mata Uang (Currencies)
+                        <span
+                            class="rounded-full px-2 py-0.5 text-xs font-bold"
+                            :class="
+                                counts.currencies > 0
+                                    ? 'bg-red-100 text-red-700 dark:bg-red-950/60 dark:text-red-300'
+                                    : 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400'
+                            "
+                        >
+                            {{ counts.currencies }}
+                        </span>
+                    </button>
                 </nav>
             </div>
 
@@ -665,6 +702,111 @@ const executeEmptyTrash = () => {
                                         <button
                                             type="button"
                                             @click="confirmForceDelete(p)"
+                                            class="inline-flex items-center gap-1 rounded-lg border border-red-200 bg-red-50 px-2.5 py-1 text-xs font-semibold text-red-700 transition-colors hover:bg-red-100 dark:border-red-800/60 dark:bg-red-950/40 dark:text-red-300 dark:hover:bg-red-900/50"
+                                        >
+                                            <svg
+                                                class="h-3.5 w-3.5"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
+                                            >
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    stroke-width="2"
+                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                                                />
+                                            </svg>
+                                            Hapus Permanen
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- TABLE 4: CURRENCIES -->
+                    <table
+                        v-else-if="activeTab === 'currencies'"
+                        class="w-full text-start text-sm text-gray-600 dark:text-gray-300"
+                    >
+                        <thead
+                            class="border-b border-gray-200 bg-gray-50 text-xs font-semibold uppercase text-gray-500 dark:border-gray-700/60 dark:bg-gray-900/40 dark:text-gray-400"
+                        >
+                            <tr>
+                                <th class="px-6 py-3.5 text-start">
+                                    Kode Mata Uang
+                                </th>
+                                <th class="px-6 py-3.5 text-start">
+                                    Nama Mata Uang
+                                </th>
+                                <th class="px-6 py-3.5 text-start">
+                                    Dihapus Pada
+                                </th>
+                                <th class="px-6 py-3.5 text-end">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody
+                            class="divide-y divide-gray-200 dark:divide-gray-700/60"
+                        >
+                            <tr
+                                v-for="c in items.data"
+                                :key="c.id"
+                                class="transition-colors hover:bg-gray-50/70 dark:hover:bg-gray-750"
+                            >
+                                <td class="px-6 py-4">
+                                    <span
+                                        class="inline-flex items-center rounded-md bg-indigo-50 px-2.5 py-1 text-xs font-bold tracking-wider text-indigo-700 ring-1 ring-inset ring-indigo-700/10 dark:bg-indigo-950/50 dark:text-indigo-300 dark:ring-indigo-400/20"
+                                    >
+                                        {{ c.code }}
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">
+                                    {{ c.name }}
+                                </td>
+                                <td
+                                    class="px-6 py-4 text-xs font-medium text-red-600 dark:text-red-400"
+                                >
+                                    {{
+                                        new Date(c.deleted_at).toLocaleString(
+                                            'id-ID',
+                                            {
+                                                dateStyle: 'medium',
+                                                timeStyle: 'short',
+                                            },
+                                        )
+                                    }}
+                                </td>
+                                <td class="px-6 py-4 text-end">
+                                    <div
+                                        class="flex items-center justify-end gap-2"
+                                    >
+                                        <button
+                                            type="button"
+                                            @click="restoreItem(c)"
+                                            class="inline-flex items-center gap-1 rounded-lg border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 transition-colors hover:bg-emerald-100 dark:border-emerald-800/60 dark:bg-emerald-950/40 dark:text-emerald-300 dark:hover:bg-emerald-900/50"
+                                            title="Pulihkan Mata Uang"
+                                        >
+                                            <svg
+                                                class="h-3.5 w-3.5"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
+                                            >
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    stroke-width="2"
+                                                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                                                />
+                                            </svg>
+                                            Pulihkan
+                                        </button>
+                                        <button
+                                            type="button"
+                                            @click="confirmForceDelete(c)"
                                             class="inline-flex items-center gap-1 rounded-lg border border-red-200 bg-red-50 px-2.5 py-1 text-xs font-semibold text-red-700 transition-colors hover:bg-red-100 dark:border-red-800/60 dark:bg-red-950/40 dark:text-red-300 dark:hover:bg-red-900/50"
                                         >
                                             <svg

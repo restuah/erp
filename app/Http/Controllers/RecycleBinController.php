@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Currency;
 use App\Models\Permission;
 use App\Models\Role;
 use App\Models\User;
+use App\Services\ActivityLogger;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -18,7 +20,7 @@ class RecycleBinController extends Controller
      */
     public function index(Request $request): Response
     {
-        $allowedTypes = ['users', 'roles', 'permissions'];
+        $allowedTypes = ['users', 'roles', 'permissions', 'currencies'];
         $activeTab = in_array($request->input('type'), $allowedTypes)
             ? $request->input('type')
             : 'users';
@@ -29,6 +31,7 @@ class RecycleBinController extends Controller
             'users' => User::onlyTrashed()->count(),
             'roles' => Role::onlyTrashed()->count(),
             'permissions' => Permission::onlyTrashed()->count(),
+            'currencies' => Currency::onlyTrashed()->count(),
         ];
 
         $items = match ($activeTab) {
@@ -61,6 +64,15 @@ class RecycleBinController extends Controller
                 ->latest('deleted_at')
                 ->paginate(10)
                 ->withQueryString(),
+
+            'currencies' => Currency::onlyTrashed()
+                ->when($search, function ($q, $search) {
+                    $q->where('code', 'like', "%{$search}%")
+                        ->orWhere('name', 'like', "%{$search}%");
+                })
+                ->latest('deleted_at')
+                ->paginate(10)
+                ->withQueryString(),
         };
 
         return Inertia::render('RecycleBin/Index', [
@@ -82,6 +94,7 @@ class RecycleBinController extends Controller
             'users' => User::onlyTrashed()->findOrFail($id)->restore(),
             'roles' => Role::onlyTrashed()->findOrFail($id)->restore(),
             'permissions' => Permission::onlyTrashed()->findOrFail($id)->restore(),
+            'currencies' => Currency::onlyTrashed()->findOrFail($id)->restore(),
             default => abort(404),
         };
 
@@ -103,6 +116,7 @@ class RecycleBinController extends Controller
             })(),
             'roles' => Role::onlyTrashed()->findOrFail($id)->forceDelete(),
             'permissions' => Permission::onlyTrashed()->findOrFail($id)->forceDelete(),
+            'currencies' => Currency::onlyTrashed()->findOrFail($id)->forceDelete(),
             default => abort(404),
         };
 
@@ -114,12 +128,31 @@ class RecycleBinController extends Controller
      */
     public function restoreAll(string $type): RedirectResponse
     {
+        $count = match ($type) {
+            'users' => User::onlyTrashed()->count(),
+            'roles' => Role::onlyTrashed()->count(),
+            'permissions' => Permission::onlyTrashed()->count(),
+            'currencies' => Currency::onlyTrashed()->count(),
+            default => abort(404),
+        };
+
         match ($type) {
             'users' => User::onlyTrashed()->restore(),
             'roles' => Role::onlyTrashed()->restore(),
             'permissions' => Permission::onlyTrashed()->restore(),
-            default => abort(404),
+            'currencies' => Currency::onlyTrashed()->restore(),
         };
+
+        ActivityLogger::log(
+            description: "Memulihkan semua data ({$count} data) pada kategori tempat sampah: {$type}",
+            event: 'bulk_restore',
+            logName: 'recycle_bin',
+            properties: [
+                'category' => $type,
+                'restored_count' => $count,
+            ],
+            status: 'success'
+        );
 
         return redirect()->back()->with('success', 'Semua data di kategori ini berhasil dipulihkan.');
     }
@@ -129,6 +162,14 @@ class RecycleBinController extends Controller
      */
     public function empty(string $type): RedirectResponse
     {
+        $count = match ($type) {
+            'users' => User::onlyTrashed()->count(),
+            'roles' => Role::onlyTrashed()->count(),
+            'permissions' => Permission::onlyTrashed()->count(),
+            'currencies' => Currency::onlyTrashed()->count(),
+            default => abort(404),
+        };
+
         match ($type) {
             'users' => (function () {
                 $users = User::onlyTrashed()->get();
@@ -141,8 +182,19 @@ class RecycleBinController extends Controller
             })(),
             'roles' => Role::onlyTrashed()->forceDelete(),
             'permissions' => Permission::onlyTrashed()->forceDelete(),
-            default => abort(404),
+            'currencies' => Currency::onlyTrashed()->forceDelete(),
         };
+
+        ActivityLogger::log(
+            description: "Mengosongkan tempat sampah ({$count} data dihapus permanen) pada kategori: {$type}",
+            event: 'empty_trash',
+            logName: 'recycle_bin',
+            properties: [
+                'category' => $type,
+                'deleted_count' => $count,
+            ],
+            status: 'warning'
+        );
 
         return redirect()->back()->with('success', 'Tempat sampah pada kategori ini berhasil dikosongkan.');
     }

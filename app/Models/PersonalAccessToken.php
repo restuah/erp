@@ -11,6 +11,8 @@ class PersonalAccessToken extends SanctumPersonalAccessToken
     use HasUuids, SoftDeletes;
 
     protected $primaryKey = 'id';
+
     protected $keyType = 'string';
+
     public $incrementing = false;
 }

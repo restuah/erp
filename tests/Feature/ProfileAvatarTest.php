@@ -22,7 +22,7 @@ test('user can upload and remove avatar from profile', function () {
 
     expect($user->avatar)->not->toBeNull();
     Storage::disk('public')->assertExists($user->avatar);
-    expect($user->avatar_url)->toContain('/storage/' . $user->avatar);
+    expect($user->avatar_url)->toContain('/storage/'.$user->avatar);
 
     // Remove avatar
     $response2 = $this->actingAs($user)->patch(route('profile.update'), [

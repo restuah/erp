@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Notifications\ResetPasswordNotification;
+use App\Traits\LogsActivity;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
@@ -16,10 +18,12 @@ use Spatie\Permission\Traits\HasRoles;
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable, HasRoles, HasUuids, SoftDeletes;
+    use HasFactory, HasRoles, HasUuids, LogsActivity, Notifiable, SoftDeletes;
 
     protected $primaryKey = 'id';
+
     protected $keyType = 'string';
+
     public $incrementing = false;
 
     /**
@@ -32,6 +36,7 @@ class User extends Authenticatable
         'email',
         'password',
         'avatar',
+        'two_factor_enabled',
     ];
 
     /**
@@ -63,10 +68,20 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'two_factor_enabled' => 'boolean',
+            'two_factor_confirmed_at' => 'datetime',
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
             'deleted_at' => 'datetime',
         ];
+    }
+
+    /**
+     * Determine if two-factor authentication is enabled for user.
+     */
+    public function hasTwoFactorEnabled(): bool
+    {
+        return (bool) $this->two_factor_enabled;
     }
 
     /**
@@ -76,14 +91,23 @@ class User extends Authenticatable
     {
         return Attribute::make(
             get: function () {
-                if (!$this->avatar) {
+                if (! $this->avatar) {
                     return null;
                 }
                 if (filter_var($this->avatar, FILTER_VALIDATE_URL)) {
                     return $this->avatar;
                 }
+
                 return Storage::disk('public')->url($this->avatar);
             },
         );
+    }
+
+    /**
+     * Send the password reset notification.
+     */
+    public function sendPasswordResetNotification(#[\SensitiveParameter] $token): void
+    {
+        $this->notify(new ResetPasswordNotification($token));
     }
 }

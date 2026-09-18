@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Listeners\LogAuthenticationActivity;
 use App\Models\PersonalAccessToken;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
@@ -31,5 +33,8 @@ class AppServiceProvider extends ServiceProvider
         Gate::before(function ($user, $ability) {
             return $user->hasRole('Superadmin') ? true : null;
         });
+
+        // Register Activity Logger Authentication subscriber
+        Event::subscribe(LogAuthenticationActivity::class);
     }
 }

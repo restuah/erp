@@ -11,6 +11,11 @@ export default {
         './resources/js/**/*.vue',
     ],
 
+    safelist: [
+        'grid-cols-7',
+        'col-span-7',
+    ],
+
     theme: {
         extend: {
             fontFamily: {
