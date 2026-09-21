@@ -8,14 +8,13 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Currency extends Model
+class ExchangeRate extends Model
 {
     use HasFactory, HasUuids, LogsActivity, SoftDeletes;
 
-    protected $table = 'currencies';
+    protected $table = 'exchange_rates';
 
     protected $primaryKey = 'id';
 
@@ -29,8 +28,14 @@ class Currency extends Model
      * @var list<string>
      */
     protected $fillable = [
-        'code',
-        'name',
+        'currency_id',
+        'currency_code',
+        'date',
+        'unit',
+        'rate_buy',
+        'rate_sell',
+        'rate_middle',
+        'source',
         'created_by',
         'updated_by',
     ];
@@ -43,6 +48,11 @@ class Currency extends Model
     protected function casts(): array
     {
         return [
+            'date' => 'date:Y-m-d',
+            'unit' => 'decimal:2',
+            'rate_buy' => 'decimal:4',
+            'rate_sell' => 'decimal:4',
+            'rate_middle' => 'decimal:4',
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
             'deleted_at' => 'datetime',
@@ -50,9 +60,9 @@ class Currency extends Model
     }
 
     /**
-     * Interact with the currency code attribute.
+     * Interact with currency_code.
      */
-    protected function code(): Attribute
+    protected function currencyCode(): Attribute
     {
         return Attribute::make(
             set: fn (?string $value) => $value !== null ? strtoupper(trim($value)) : null,
@@ -60,7 +70,15 @@ class Currency extends Model
     }
 
     /**
-     * Relasi ke user pembuat data.
+     * Relasi ke master mata uang.
+     */
+    public function currency(): BelongsTo
+    {
+        return $this->belongsTo(Currency::class, 'currency_id');
+    }
+
+    /**
+     * Relasi ke pembuat record.
      */
     public function creator(): BelongsTo
     {
@@ -68,7 +86,7 @@ class Currency extends Model
     }
 
     /**
-     * Relasi ke user yang memperbarui data.
+     * Relasi ke pengubah record.
      */
     public function updater(): BelongsTo
     {
@@ -76,19 +94,11 @@ class Currency extends Model
     }
 
     /**
-     * Relasi ke riwayat kurs mata uang.
-     */
-     public function rates(): HasMany
-     {
-         return $this->hasMany(ExchangeRate::class, 'currency_id');
-     }
-
-    /**
      * Record title for LogsActivity trait.
      */
     public function getActivityRecordTitle(): string
     {
-        return 'mata uang';
+        return 'kurs mata uang';
     }
 
     /**
@@ -96,6 +106,7 @@ class Currency extends Model
      */
     public function getActivitySubjectLabel(): string
     {
-        return "{$this->code} ({$this->name})";
+        $dateFormatted = is_string($this->date) ? $this->date : $this->date?->format('d/m/Y');
+        return "{$this->currency_code} ({$dateFormatted})";
     }
 }

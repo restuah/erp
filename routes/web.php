@@ -3,6 +3,7 @@
 use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\CurrencyController;
+use App\Http\Controllers\ExchangeRateController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RecycleBinController;
@@ -71,6 +72,10 @@ Route::middleware('auth')->group(function () {
 
         // Mata Uang (Currencies)
         Route::resource('currencies', CurrencyController::class)->except(['create', 'show', 'edit']);
+
+        // Kurs Nilai Tukar (Exchange Rates)
+        Route::post('exchange-rates/sync', [ExchangeRateController::class, 'sync'])->name('exchange-rates.sync');
+        Route::resource('exchange-rates', ExchangeRateController::class)->except(['create', 'show', 'edit']);
     });
 });
 

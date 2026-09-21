@@ -5,6 +5,7 @@ import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import SidebarLink from '@/Components/SidebarLink.vue';
 import ThemeToggle from '@/Components/ThemeToggle.vue';
+import NavbarExchangeRate from '@/Components/NavbarExchangeRate.vue';
 import { Link, router } from '@inertiajs/vue3';
 
 // Sidebar states
@@ -229,6 +230,31 @@ onUnmounted(() => {
                                 </svg>
                             </template>
                             Master Mata Uang
+                        </SidebarLink>
+
+                        <SidebarLink
+                            :href="route('exchange-rates.index')"
+                            :active="route().current('exchange-rates.*')"
+                            :collapsed="sidebarCollapsed"
+                            title="Master Kurs"
+                        >
+                            <template #icon>
+                                <svg
+                                    class="h-5 w-5"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"
+                                    />
+                                </svg>
+                            </template>
+                            Master Kurs
                         </SidebarLink>
                     </div>
                 </div>
@@ -703,6 +729,11 @@ onUnmounted(() => {
 
                 <!-- Right: Quick actions, ThemeToggle, Profile Dropdown -->
                 <div class="flex items-center gap-2 sm:gap-3">
+                    <!-- Currency Exchange Rate Widget -->
+                    <NavbarExchangeRate />
+
+                    <div class="hidden h-6 w-px bg-gray-200 dark:bg-gray-700 sm:block"></div>
+
                     <!-- Theme Toggle (Beside Profile) -->
                     <div class="flex items-center">
                         <ThemeToggle />

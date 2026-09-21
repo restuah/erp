@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Currency;
+use App\Models\ExchangeRate;
 use App\Models\Permission;
 use App\Models\Role;
 use App\Models\User;
@@ -20,7 +21,7 @@ class RecycleBinController extends Controller
      */
     public function index(Request $request): Response
     {
-        $allowedTypes = ['users', 'roles', 'permissions', 'currencies'];
+        $allowedTypes = ['users', 'roles', 'permissions', 'currencies', 'exchange_rates'];
         $activeTab = in_array($request->input('type'), $allowedTypes)
             ? $request->input('type')
             : 'users';
@@ -32,6 +33,7 @@ class RecycleBinController extends Controller
             'roles' => Role::onlyTrashed()->count(),
             'permissions' => Permission::onlyTrashed()->count(),
             'currencies' => Currency::onlyTrashed()->count(),
+            'exchange_rates' => ExchangeRate::onlyTrashed()->count(),
         ];
 
         $items = match ($activeTab) {
@@ -73,6 +75,19 @@ class RecycleBinController extends Controller
                 ->latest('deleted_at')
                 ->paginate(10)
                 ->withQueryString(),
+
+            'exchange_rates' => ExchangeRate::onlyTrashed()
+                ->with('currency:id,code,name')
+                ->when($search, function ($q, $search) {
+                    $q->where(function ($sub) use ($search) {
+                        $sub->where('currency_code', 'like', "%{$search}%")
+                            ->orWhere('date', 'like', "%{$search}%")
+                            ->orWhere('source', 'like', "%{$search}%");
+                    });
+                })
+                ->latest('deleted_at')
+                ->paginate(10)
+                ->withQueryString(),
         };
 
         return Inertia::render('RecycleBin/Index', [
@@ -95,6 +110,7 @@ class RecycleBinController extends Controller
             'roles' => Role::onlyTrashed()->findOrFail($id)->restore(),
             'permissions' => Permission::onlyTrashed()->findOrFail($id)->restore(),
             'currencies' => Currency::onlyTrashed()->findOrFail($id)->restore(),
+            'exchange_rates' => ExchangeRate::onlyTrashed()->findOrFail($id)->restore(),
             default => abort(404),
         };
 
@@ -117,6 +133,7 @@ class RecycleBinController extends Controller
             'roles' => Role::onlyTrashed()->findOrFail($id)->forceDelete(),
             'permissions' => Permission::onlyTrashed()->findOrFail($id)->forceDelete(),
             'currencies' => Currency::onlyTrashed()->findOrFail($id)->forceDelete(),
+            'exchange_rates' => ExchangeRate::onlyTrashed()->findOrFail($id)->forceDelete(),
             default => abort(404),
         };
 
@@ -133,6 +150,7 @@ class RecycleBinController extends Controller
             'roles' => Role::onlyTrashed()->count(),
             'permissions' => Permission::onlyTrashed()->count(),
             'currencies' => Currency::onlyTrashed()->count(),
+            'exchange_rates' => ExchangeRate::onlyTrashed()->count(),
             default => abort(404),
         };
 
@@ -141,6 +159,7 @@ class RecycleBinController extends Controller
             'roles' => Role::onlyTrashed()->restore(),
             'permissions' => Permission::onlyTrashed()->restore(),
             'currencies' => Currency::onlyTrashed()->restore(),
+            'exchange_rates' => ExchangeRate::onlyTrashed()->restore(),
         };
 
         ActivityLogger::log(
@@ -167,6 +186,7 @@ class RecycleBinController extends Controller
             'roles' => Role::onlyTrashed()->count(),
             'permissions' => Permission::onlyTrashed()->count(),
             'currencies' => Currency::onlyTrashed()->count(),
+            'exchange_rates' => ExchangeRate::onlyTrashed()->count(),
             default => abort(404),
         };
 
@@ -183,6 +203,7 @@ class RecycleBinController extends Controller
             'roles' => Role::onlyTrashed()->forceDelete(),
             'permissions' => Permission::onlyTrashed()->forceDelete(),
             'currencies' => Currency::onlyTrashed()->forceDelete(),
+            'exchange_rates' => ExchangeRate::onlyTrashed()->forceDelete(),
         };
 
         ActivityLogger::log(

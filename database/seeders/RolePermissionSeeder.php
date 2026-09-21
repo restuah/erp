@@ -51,6 +51,13 @@ class RolePermissionSeeder extends Seeder
             'currencies.create',
             'currencies.edit',
             'currencies.delete',
+
+            // Master Exchange Rate management
+            'exchange_rates.view',
+            'exchange_rates.create',
+            'exchange_rates.edit',
+            'exchange_rates.delete',
+            'exchange_rates.sync',
         ];
 
         foreach ($permissions as $permission) {
@@ -86,6 +93,11 @@ class RolePermissionSeeder extends Seeder
             'currencies.create',
             'currencies.edit',
             'currencies.delete',
+            'exchange_rates.view',
+            'exchange_rates.create',
+            'exchange_rates.edit',
+            'exchange_rates.delete',
+            'exchange_rates.sync',
         ]);
 
         $userRole = Role::firstOrCreate([

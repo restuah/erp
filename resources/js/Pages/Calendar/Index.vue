@@ -500,7 +500,7 @@ const formatDateTimeIndo = (dtStr) => {
                                 <select
                                     v-model="selectedMonth"
                                     @change="applyNavigation"
-                                    class="border-0 bg-transparent py-1 pl-1 pr-6 text-sm font-bold text-gray-900 focus:ring-0 dark:text-white cursor-pointer"
+                                    class="border-0 bg-transparent py-1 pl-1 pr-10 text-sm font-bold text-gray-900 focus:ring-0 dark:text-white cursor-pointer"
                                 >
                                     <option
                                         v-for="m in monthsList"
@@ -515,7 +515,7 @@ const formatDateTimeIndo = (dtStr) => {
                                 <select
                                     v-model="selectedYear"
                                     @change="applyNavigation"
-                                    class="border-0 bg-transparent py-1 pl-1 pr-6 text-sm font-bold text-indigo-600 focus:ring-0 dark:text-indigo-400 cursor-pointer"
+                                    class="border-0 bg-transparent py-1 pl-1 pr-10 text-sm font-bold text-indigo-600 focus:ring-0 dark:text-indigo-400 cursor-pointer"
                                 >
                                     <option
                                         v-for="y in yearsList"

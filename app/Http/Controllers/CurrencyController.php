@@ -6,6 +6,7 @@ use App\Models\Currency;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -72,6 +73,8 @@ class CurrencyController extends Controller
             'updated_by' => Auth::id(),
         ]);
 
+        Cache::forget('navbar_exchange_rates');
+
         return redirect()->route('currencies.index')->with('success', 'Mata uang berhasil ditambahkan.');
     }
 
@@ -102,6 +105,8 @@ class CurrencyController extends Controller
             'updated_by' => Auth::id(),
         ]);
 
+        Cache::forget('navbar_exchange_rates');
+
         return redirect()->route('currencies.index')->with('success', 'Mata uang berhasil diperbarui.');
     }
 
@@ -111,6 +116,8 @@ class CurrencyController extends Controller
     public function destroy(Currency $currency): RedirectResponse
     {
         $currency->delete();
+
+        Cache::forget('navbar_exchange_rates');
 
         return redirect()->route('currencies.index')->with('success', 'Mata uang berhasil dipindahkan ke tempat sampah.');
     }
