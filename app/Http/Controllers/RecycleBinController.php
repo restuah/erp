@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Budget;
+use App\Models\BudgetClassification;
+use App\Models\ChartOfAccount;
 use App\Models\Currency;
 use App\Models\ExchangeRate;
 use App\Models\Permission;
 use App\Models\Role;
+use App\Models\UnitOfMeasure;
 use App\Models\User;
 use App\Services\ActivityLogger;
 use Illuminate\Http\RedirectResponse;
@@ -21,7 +25,7 @@ class RecycleBinController extends Controller
      */
     public function index(Request $request): Response
     {
-        $allowedTypes = ['users', 'roles', 'permissions', 'currencies', 'exchange_rates'];
+        $allowedTypes = ['users', 'roles', 'permissions', 'currencies', 'exchange_rates', 'budgets', 'budget_classifications', 'chart_of_accounts', 'unit_of_measures'];
         $activeTab = in_array($request->input('type'), $allowedTypes)
             ? $request->input('type')
             : 'users';
@@ -34,6 +38,10 @@ class RecycleBinController extends Controller
             'permissions' => Permission::onlyTrashed()->count(),
             'currencies' => Currency::onlyTrashed()->count(),
             'exchange_rates' => ExchangeRate::onlyTrashed()->count(),
+            'budgets' => Budget::onlyTrashed()->count(),
+            'budget_classifications' => BudgetClassification::onlyTrashed()->count(),
+            'chart_of_accounts' => ChartOfAccount::onlyTrashed()->count(),
+            'unit_of_measures' => UnitOfMeasure::onlyTrashed()->count(),
         ];
 
         $items = match ($activeTab) {
@@ -88,6 +96,46 @@ class RecycleBinController extends Controller
                 ->latest('deleted_at')
                 ->paginate(10)
                 ->withQueryString(),
+
+            'budgets' => Budget::onlyTrashed()
+                ->with('pic:id,name,email')
+                ->when($search, function ($q, $search) {
+                    $q->where(function ($sub) use ($search) {
+                        $sub->where('code', 'like', "%{$search}%")
+                            ->orWhere('name', 'like', "%{$search}%");
+                    });
+                })
+                ->latest('deleted_at')
+                ->paginate(10)
+                ->withQueryString(),
+
+            'budget_classifications' => BudgetClassification::onlyTrashed()
+                ->when($search, function ($q, $search) {
+                    $q->where('name', 'like', "%{$search}%")
+                        ->orWhere('description', 'like', "%{$search}%");
+                })
+                ->latest('deleted_at')
+                ->paginate(10)
+                ->withQueryString(),
+
+            'chart_of_accounts' => ChartOfAccount::onlyTrashed()
+                ->when($search, function ($q, $search) {
+                    $q->where('account_code', 'like', "%{$search}%")
+                        ->orWhere('account_name', 'like', "%{$search}%");
+                })
+                ->latest('deleted_at')
+                ->paginate(10)
+                ->withQueryString(),
+
+            'unit_of_measures' => UnitOfMeasure::onlyTrashed()
+                ->when($search, function ($q, $search) {
+                    $q->where('code', 'like', "%{$search}%")
+                        ->orWhere('name', 'like', "%{$search}%")
+                        ->orWhere('symbol', 'like', "%{$search}%");
+                })
+                ->latest('deleted_at')
+                ->paginate(10)
+                ->withQueryString(),
         };
 
         return Inertia::render('RecycleBin/Index', [
@@ -111,6 +159,10 @@ class RecycleBinController extends Controller
             'permissions' => Permission::onlyTrashed()->findOrFail($id)->restore(),
             'currencies' => Currency::onlyTrashed()->findOrFail($id)->restore(),
             'exchange_rates' => ExchangeRate::onlyTrashed()->findOrFail($id)->restore(),
+            'budgets' => Budget::onlyTrashed()->findOrFail($id)->restore(),
+            'budget_classifications' => BudgetClassification::onlyTrashed()->findOrFail($id)->restore(),
+            'chart_of_accounts' => ChartOfAccount::onlyTrashed()->findOrFail($id)->restore(),
+            'unit_of_measures' => UnitOfMeasure::onlyTrashed()->findOrFail($id)->restore(),
             default => abort(404),
         };
 
@@ -134,6 +186,10 @@ class RecycleBinController extends Controller
             'permissions' => Permission::onlyTrashed()->findOrFail($id)->forceDelete(),
             'currencies' => Currency::onlyTrashed()->findOrFail($id)->forceDelete(),
             'exchange_rates' => ExchangeRate::onlyTrashed()->findOrFail($id)->forceDelete(),
+            'budgets' => Budget::onlyTrashed()->findOrFail($id)->forceDelete(),
+            'budget_classifications' => BudgetClassification::onlyTrashed()->findOrFail($id)->forceDelete(),
+            'chart_of_accounts' => ChartOfAccount::onlyTrashed()->findOrFail($id)->forceDelete(),
+            'unit_of_measures' => UnitOfMeasure::onlyTrashed()->findOrFail($id)->forceDelete(),
             default => abort(404),
         };
 
@@ -151,6 +207,10 @@ class RecycleBinController extends Controller
             'permissions' => Permission::onlyTrashed()->count(),
             'currencies' => Currency::onlyTrashed()->count(),
             'exchange_rates' => ExchangeRate::onlyTrashed()->count(),
+            'budgets' => Budget::onlyTrashed()->count(),
+            'budget_classifications' => BudgetClassification::onlyTrashed()->count(),
+            'chart_of_accounts' => ChartOfAccount::onlyTrashed()->count(),
+            'unit_of_measures' => UnitOfMeasure::onlyTrashed()->count(),
             default => abort(404),
         };
 
@@ -160,6 +220,10 @@ class RecycleBinController extends Controller
             'permissions' => Permission::onlyTrashed()->restore(),
             'currencies' => Currency::onlyTrashed()->restore(),
             'exchange_rates' => ExchangeRate::onlyTrashed()->restore(),
+            'budgets' => Budget::onlyTrashed()->restore(),
+            'budget_classifications' => BudgetClassification::onlyTrashed()->restore(),
+            'chart_of_accounts' => ChartOfAccount::onlyTrashed()->restore(),
+            'unit_of_measures' => UnitOfMeasure::onlyTrashed()->restore(),
         };
 
         ActivityLogger::log(
@@ -187,6 +251,10 @@ class RecycleBinController extends Controller
             'permissions' => Permission::onlyTrashed()->count(),
             'currencies' => Currency::onlyTrashed()->count(),
             'exchange_rates' => ExchangeRate::onlyTrashed()->count(),
+            'budgets' => Budget::onlyTrashed()->count(),
+            'budget_classifications' => BudgetClassification::onlyTrashed()->count(),
+            'chart_of_accounts' => ChartOfAccount::onlyTrashed()->count(),
+            'unit_of_measures' => UnitOfMeasure::onlyTrashed()->count(),
             default => abort(404),
         };
 
@@ -204,6 +272,10 @@ class RecycleBinController extends Controller
             'permissions' => Permission::onlyTrashed()->forceDelete(),
             'currencies' => Currency::onlyTrashed()->forceDelete(),
             'exchange_rates' => ExchangeRate::onlyTrashed()->forceDelete(),
+            'budgets' => Budget::onlyTrashed()->forceDelete(),
+            'budget_classifications' => BudgetClassification::onlyTrashed()->forceDelete(),
+            'chart_of_accounts' => ChartOfAccount::onlyTrashed()->forceDelete(),
+            'unit_of_measures' => UnitOfMeasure::onlyTrashed()->forceDelete(),
         };
 
         ActivityLogger::log(

@@ -1,7 +1,10 @@
 <?php
 
 use App\Http\Controllers\ActivityLogController;
+use App\Http\Controllers\BudgetController;
+use App\Http\Controllers\BudgetClassificationController;
 use App\Http\Controllers\CalendarController;
+use App\Http\Controllers\ChartOfAccountController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\ExchangeRateController;
 use App\Http\Controllers\PermissionController;
@@ -9,6 +12,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RecycleBinController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TwoFactorAuthenticationController;
+use App\Http\Controllers\UnitOfMeasureController;
 use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -76,6 +80,19 @@ Route::middleware('auth')->group(function () {
         // Kurs Nilai Tukar (Exchange Rates)
         Route::post('exchange-rates/sync', [ExchangeRateController::class, 'sync'])->name('exchange-rates.sync');
         Route::resource('exchange-rates', ExchangeRateController::class)->except(['create', 'show', 'edit']);
+
+        // Master Budget
+        Route::get('budgets/generate-code', [BudgetController::class, 'generateCode'])->name('budgets.generate-code');
+        Route::resource('budgets', BudgetController::class)->except(['create', 'show', 'edit']);
+
+        // Master Klasifikasi Budget
+        Route::resource('budget-classifications', BudgetClassificationController::class)->except(['create', 'show', 'edit']);
+
+        // Master Bagan Akun (Chart of Accounts)
+        Route::resource('chart-of-accounts', ChartOfAccountController::class)->except(['create', 'show', 'edit']);
+
+        // Master Satuan (Unit of Measures)
+        Route::resource('unit-of-measures', UnitOfMeasureController::class)->except(['create', 'show', 'edit']);
     });
 });
 

@@ -333,6 +333,154 @@ const executeEmptyTrash = () => {
                             {{ counts.currencies }}
                         </span>
                     </button>
+
+                    <button
+                        type="button"
+                        @click="switchTab('budgets')"
+                        class="group inline-flex items-center gap-2 border-b-2 px-1 py-3 text-sm font-medium transition-colors"
+                        :class="
+                            activeTab === 'budgets'
+                                ? 'border-indigo-600 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400'
+                                : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
+                        "
+                    >
+                        <svg
+                            class="h-4 w-4"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"
+                            />
+                        </svg>
+                        Master Budget
+                        <span
+                            class="rounded-full px-2 py-0.5 text-xs font-bold"
+                            :class="
+                                counts.budgets > 0
+                                    ? 'bg-red-100 text-red-700 dark:bg-red-950/60 dark:text-red-300'
+                                    : 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400'
+                            "
+                        >
+                            {{ counts.budgets }}
+                        </span>
+                    </button>
+
+                    <button
+                        type="button"
+                        @click="switchTab('budget_classifications')"
+                        class="group inline-flex items-center gap-2 border-b-2 px-1 py-3 text-sm font-medium transition-colors"
+                        :class="
+                            activeTab === 'budget_classifications'
+                                ? 'border-indigo-600 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400'
+                                : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
+                        "
+                    >
+                        <svg
+                            class="h-4 w-4"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
+                            />
+                        </svg>
+                        Klasifikasi Budget
+                        <span
+                            class="rounded-full px-2 py-0.5 text-xs font-bold"
+                            :class="
+                                counts.budget_classifications > 0
+                                    ? 'bg-red-100 text-red-700 dark:bg-red-950/60 dark:text-red-300'
+                                    : 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400'
+                            "
+                        >
+                            {{ counts.budget_classifications }}
+                        </span>
+                    </button>
+
+                    <button
+                        type="button"
+                        @click="switchTab('chart_of_accounts')"
+                        class="group inline-flex items-center gap-2 border-b-2 px-1 py-3 text-sm font-medium transition-colors"
+                        :class="
+                            activeTab === 'chart_of_accounts'
+                                ? 'border-indigo-600 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400'
+                                : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
+                        "
+                    >
+                        <svg
+                            class="h-4 w-4"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                            />
+                        </svg>
+                        Bagan Akun (COA)
+                        <span
+                            class="rounded-full px-2 py-0.5 text-xs font-bold"
+                            :class="
+                                counts.chart_of_accounts > 0
+                                    ? 'bg-red-100 text-red-700 dark:bg-red-950/60 dark:text-red-300'
+                                    : 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400'
+                            "
+                        >
+                            {{ counts.chart_of_accounts }}
+                        </span>
+                    </button>
+
+                    <button
+                        type="button"
+                        @click="switchTab('unit_of_measures')"
+                        class="group inline-flex items-center gap-2 border-b-2 px-1 py-3 text-sm font-medium transition-colors"
+                        :class="
+                            activeTab === 'unit_of_measures'
+                                ? 'border-indigo-600 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400'
+                                : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
+                        "
+                    >
+                        <svg
+                            class="h-4 w-4"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"
+                            />
+                        </svg>
+                        Satuan (UOM)
+                        <span
+                            class="rounded-full px-2 py-0.5 text-xs font-bold"
+                            :class="
+                                counts.unit_of_measures > 0
+                                    ? 'bg-red-100 text-red-700 dark:bg-red-950/60 dark:text-red-300'
+                                    : 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400'
+                            "
+                        >
+                            {{ counts.unit_of_measures }}
+                        </span>
+                    </button>
                 </nav>
             </div>
 
@@ -807,6 +955,430 @@ const executeEmptyTrash = () => {
                                         <button
                                             type="button"
                                             @click="confirmForceDelete(c)"
+                                            class="inline-flex items-center gap-1 rounded-lg border border-red-200 bg-red-50 px-2.5 py-1 text-xs font-semibold text-red-700 transition-colors hover:bg-red-100 dark:border-red-800/60 dark:bg-red-950/40 dark:text-red-300 dark:hover:bg-red-900/50"
+                                        >
+                                            <svg
+                                                class="h-3.5 w-3.5"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
+                                            >
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    stroke-width="2"
+                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                                                />
+                                            </svg>
+                                            Hapus Permanen
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- TABLE 6: BUDGETS -->
+                    <table
+                        v-else-if="activeTab === 'budgets'"
+                        class="w-full text-start text-sm text-gray-600 dark:text-gray-300"
+                    >
+                        <thead
+                            class="border-b border-gray-200 bg-gray-50 text-xs font-semibold uppercase text-gray-500 dark:border-gray-700/60 dark:bg-gray-900/40 dark:text-gray-400"
+                        >
+                            <tr>
+                                <th class="px-6 py-3.5 text-start">
+                                    Kode & Nama Budget
+                                </th>
+                                <th class="px-6 py-3.5 text-start">
+                                    PIC Budget (Owner)
+                                </th>
+                                <th class="px-6 py-3.5 text-start">
+                                    Dihapus Pada
+                                </th>
+                                <th class="px-6 py-3.5 text-end">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody
+                            class="divide-y divide-gray-200 dark:divide-gray-700/60"
+                        >
+                            <tr
+                                v-for="b in items.data"
+                                :key="b.id"
+                                class="transition-colors hover:bg-gray-50/70 dark:hover:bg-gray-750"
+                            >
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-2.5">
+                                        <span
+                                            class="inline-flex items-center rounded-md bg-indigo-50 px-2 py-0.5 font-mono text-xs font-bold text-indigo-700 dark:bg-indigo-950/50 dark:text-indigo-300"
+                                        >
+                                            {{ b.code }}
+                                        </span>
+                                        <span class="font-medium text-gray-900 dark:text-white">
+                                            {{ b.name }}
+                                        </span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="text-xs">
+                                        <p class="font-semibold text-gray-800 dark:text-gray-200">
+                                            {{ b.pic?.name || '-' }}
+                                        </p>
+                                        <p class="text-gray-500 dark:text-gray-400">
+                                            {{ b.pic?.email }}
+                                        </p>
+                                    </div>
+                                </td>
+                                <td
+                                    class="px-6 py-4 text-xs font-medium text-red-600 dark:text-red-400"
+                                >
+                                    {{
+                                        new Date(b.deleted_at).toLocaleString(
+                                            'id-ID',
+                                            {
+                                                dateStyle: 'medium',
+                                                timeStyle: 'short',
+                                            },
+                                        )
+                                    }}
+                                </td>
+                                <td class="px-6 py-4 text-end">
+                                    <div
+                                        class="flex items-center justify-end gap-2"
+                                    >
+                                        <button
+                                            type="button"
+                                            @click="restoreItem(b)"
+                                            class="inline-flex items-center gap-1 rounded-lg border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 transition-colors hover:bg-emerald-100 dark:border-emerald-800/60 dark:bg-emerald-950/40 dark:text-emerald-300 dark:hover:bg-emerald-900/50"
+                                            title="Pulihkan Budget"
+                                        >
+                                            <svg
+                                                class="h-3.5 w-3.5"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
+                                            >
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    stroke-width="2"
+                                                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                                                />
+                                            </svg>
+                                            Pulihkan
+                                        </button>
+                                        <button
+                                            type="button"
+                                            @click="confirmForceDelete(b)"
+                                            class="inline-flex items-center gap-1 rounded-lg border border-red-200 bg-red-50 px-2.5 py-1 text-xs font-semibold text-red-700 transition-colors hover:bg-red-100 dark:border-red-800/60 dark:bg-red-950/40 dark:text-red-300 dark:hover:bg-red-900/50"
+                                        >
+                                            <svg
+                                                class="h-3.5 w-3.5"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
+                                            >
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    stroke-width="2"
+                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                                                />
+                                            </svg>
+                                            Hapus Permanen
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- TABLE 7: BUDGET CLASSIFICATIONS -->
+                    <table
+                        v-else-if="activeTab === 'budget_classifications'"
+                        class="w-full text-start text-sm text-gray-600 dark:text-gray-300"
+                    >
+                        <thead
+                            class="border-b border-gray-200 bg-gray-50 text-xs font-semibold uppercase text-gray-500 dark:border-gray-700/60 dark:bg-gray-900/40 dark:text-gray-400"
+                        >
+                            <tr>
+                                <th class="px-6 py-3.5 text-start">
+                                    Nama Klasifikasi
+                                </th>
+                                <th class="px-6 py-3.5 text-start">
+                                    Keterangan
+                                </th>
+                                <th class="px-6 py-3.5 text-start">
+                                    Dihapus Pada
+                                </th>
+                                <th class="px-6 py-3.5 text-end">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody
+                            class="divide-y divide-gray-200 dark:divide-gray-700/60"
+                        >
+                            <tr
+                                v-for="bc in items.data"
+                                :key="bc.id"
+                                class="transition-colors hover:bg-gray-50/70 dark:hover:bg-gray-750"
+                            >
+                                <td class="px-6 py-4">
+                                    <span class="font-bold text-gray-900 dark:text-white">
+                                        {{ bc.name }}
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 text-xs text-gray-500 dark:text-gray-400">
+                                    {{ bc.description || '-' }}
+                                </td>
+                                <td
+                                    class="px-6 py-4 text-xs font-medium text-red-600 dark:text-red-400"
+                                >
+                                    {{
+                                        new Date(bc.deleted_at).toLocaleString(
+                                            'id-ID',
+                                            {
+                                                dateStyle: 'medium',
+                                                timeStyle: 'short',
+                                            },
+                                        )
+                                    }}
+                                </td>
+                                <td class="px-6 py-4 text-end">
+                                    <div
+                                        class="flex items-center justify-end gap-2"
+                                    >
+                                        <button
+                                            type="button"
+                                            @click="restoreItem(bc)"
+                                            class="inline-flex items-center gap-1 rounded-lg border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 transition-colors hover:bg-emerald-100 dark:border-emerald-800/60 dark:bg-emerald-950/40 dark:text-emerald-300 dark:hover:bg-emerald-900/50"
+                                            title="Pulihkan Klasifikasi"
+                                        >
+                                            <svg
+                                                class="h-3.5 w-3.5"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
+                                            >
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    stroke-width="2"
+                                                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                                                />
+                                            </svg>
+                                            Pulihkan
+                                        </button>
+                                        <button
+                                            type="button"
+                                            @click="confirmForceDelete(bc)"
+                                            class="inline-flex items-center gap-1 rounded-lg border border-red-200 bg-red-50 px-2.5 py-1 text-xs font-semibold text-red-700 transition-colors hover:bg-red-100 dark:border-red-800/60 dark:bg-red-950/40 dark:text-red-300 dark:hover:bg-red-900/50"
+                                        >
+                                            <svg
+                                                class="h-3.5 w-3.5"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
+                                            >
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    stroke-width="2"
+                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                                                />
+                                            </svg>
+                                            Hapus Permanen
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- TABLE 8: CHART OF ACCOUNTS -->
+                    <table
+                        v-else-if="activeTab === 'chart_of_accounts'"
+                        class="w-full text-start text-sm text-gray-600 dark:text-gray-300"
+                    >
+                        <thead
+                            class="border-b border-gray-200 bg-gray-50 text-xs font-semibold uppercase text-gray-500 dark:border-gray-700/60 dark:bg-gray-900/40 dark:text-gray-400"
+                        >
+                            <tr>
+                                <th class="px-6 py-3.5 text-start">Kode Akun</th>
+                                <th class="px-6 py-3.5 text-start">Nama Akun</th>
+                                <th class="px-6 py-3.5 text-start">Kategori / Posisi</th>
+                                <th class="px-6 py-3.5 text-start">Dihapus Pada</th>
+                                <th class="px-6 py-3.5 text-end">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200 dark:divide-gray-700/60">
+                            <tr
+                                v-for="coa in items.data"
+                                :key="coa.id"
+                                class="transition-colors hover:bg-gray-50/70 dark:hover:bg-gray-700/50"
+                            >
+                                <td class="px-6 py-4">
+                                    <span class="font-mono font-bold text-indigo-600 dark:text-indigo-400">
+                                        {{ coa.account_code }}
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="font-bold text-gray-900 dark:text-white">
+                                        {{ coa.account_name }}
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="uppercase text-xs font-semibold px-2 py-0.5 rounded bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300 mr-1.5">
+                                        {{ coa.kategori === 'bs' ? 'Neraca (BS)' : 'Laba Rugi (PL)' }}
+                                    </span>
+                                    <span
+                                        class="uppercase text-xs font-semibold px-2 py-0.5 rounded"
+                                        :class="coa.jenis === 'debit' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300' : 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300'"
+                                    >
+                                        {{ coa.jenis }}
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 text-xs font-medium text-red-600 dark:text-red-400">
+                                    {{
+                                        new Date(coa.deleted_at).toLocaleString('id-ID', {
+                                            dateStyle: 'medium',
+                                            timeStyle: 'short',
+                                        })
+                                    }}
+                                </td>
+                                <td class="px-6 py-4 text-end">
+                                    <div class="flex items-center justify-end gap-2">
+                                        <button
+                                            type="button"
+                                            @click="restoreItem(coa)"
+                                            class="inline-flex items-center gap-1 rounded-lg border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 transition-colors hover:bg-emerald-100 dark:border-emerald-800/60 dark:bg-emerald-950/40 dark:text-emerald-300 dark:hover:bg-emerald-900/50"
+                                            title="Pulihkan Akun"
+                                        >
+                                            <svg
+                                                class="h-3.5 w-3.5"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
+                                            >
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    stroke-width="2"
+                                                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                                                />
+                                            </svg>
+                                            Pulihkan
+                                        </button>
+                                        <button
+                                            type="button"
+                                            @click="confirmForceDelete(coa)"
+                                            class="inline-flex items-center gap-1 rounded-lg border border-red-200 bg-red-50 px-2.5 py-1 text-xs font-semibold text-red-700 transition-colors hover:bg-red-100 dark:border-red-800/60 dark:bg-red-950/40 dark:text-red-300 dark:hover:bg-red-900/50"
+                                        >
+                                            <svg
+                                                class="h-3.5 w-3.5"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
+                                            >
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    stroke-width="2"
+                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                                                />
+                                            </svg>
+                                            Hapus Permanen
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- TABLE 9: UNIT OF MEASURES -->
+                    <table
+                        v-else-if="activeTab === 'unit_of_measures'"
+                        class="w-full text-start text-sm text-gray-600 dark:text-gray-300"
+                    >
+                        <thead
+                            class="border-b border-gray-200 bg-gray-50 text-xs font-semibold uppercase text-gray-500 dark:border-gray-700/60 dark:bg-gray-900/40 dark:text-gray-400"
+                        >
+                            <tr>
+                                <th class="px-6 py-3.5 text-start">Kode Satuan</th>
+                                <th class="px-6 py-3.5 text-start">Nama Satuan</th>
+                                <th class="px-6 py-3.5 text-start">Simbol</th>
+                                <th class="px-6 py-3.5 text-start">Kategori</th>
+                                <th class="px-6 py-3.5 text-start">Dihapus Pada</th>
+                                <th class="px-6 py-3.5 text-end">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200 dark:divide-gray-700/60">
+                            <tr
+                                v-for="uom in items.data"
+                                :key="uom.id"
+                                class="transition-colors hover:bg-gray-50/70 dark:hover:bg-gray-700/50"
+                            >
+                                <td class="px-6 py-4">
+                                    <span class="font-mono font-bold text-indigo-600 dark:text-indigo-400">
+                                        {{ uom.code }}
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="font-bold text-gray-900 dark:text-white">
+                                        {{ uom.name }}
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="rounded bg-gray-100 px-2 py-0.5 text-xs font-mono text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                                        {{ uom.symbol || '-' }}
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-900/40 dark:text-blue-300">
+                                        {{ uom.category }}
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 text-xs font-medium text-red-600 dark:text-red-400">
+                                    {{
+                                        new Date(uom.deleted_at).toLocaleString('id-ID', {
+                                            dateStyle: 'medium',
+                                            timeStyle: 'short',
+                                        })
+                                    }}
+                                </td>
+                                <td class="px-6 py-4 text-end">
+                                    <div class="flex items-center justify-end gap-2">
+                                        <button
+                                            type="button"
+                                            @click="restoreItem(uom)"
+                                            class="inline-flex items-center gap-1 rounded-lg border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 transition-colors hover:bg-emerald-100 dark:border-emerald-800/60 dark:bg-emerald-950/40 dark:text-emerald-300 dark:hover:bg-emerald-900/50"
+                                            title="Pulihkan Satuan"
+                                        >
+                                            <svg
+                                                class="h-3.5 w-3.5"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
+                                            >
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    stroke-width="2"
+                                                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                                                />
+                                            </svg>
+                                            Pulihkan
+                                        </button>
+                                        <button
+                                            type="button"
+                                            @click="confirmForceDelete(uom)"
                                             class="inline-flex items-center gap-1 rounded-lg border border-red-200 bg-red-50 px-2.5 py-1 text-xs font-semibold text-red-700 transition-colors hover:bg-red-100 dark:border-red-800/60 dark:bg-red-950/40 dark:text-red-300 dark:hover:bg-red-900/50"
                                         >
                                             <svg

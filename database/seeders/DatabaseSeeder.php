@@ -40,5 +40,11 @@ class DatabaseSeeder extends Seeder
 
         // 4. Seed Currencies
         $this->call(CurrencySeeder::class);
+
+        // 5. Seed Chart of Accounts
+        $this->call(ChartOfAccountSeeder::class);
+
+        // 6. Seed Units of Measure (UOM)
+        $this->call(UnitOfMeasureSeeder::class);
     }
 }

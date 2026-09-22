@@ -58,6 +58,30 @@ class RolePermissionSeeder extends Seeder
             'exchange_rates.edit',
             'exchange_rates.delete',
             'exchange_rates.sync',
+
+            // Master Budget management
+            'budgets.view',
+            'budgets.create',
+            'budgets.edit',
+            'budgets.delete',
+
+            // Master Budget Classification management
+            'budget_classifications.view',
+            'budget_classifications.create',
+            'budget_classifications.edit',
+            'budget_classifications.delete',
+
+            // Master Chart of Accounts (COA) management
+            'coa.view',
+            'coa.create',
+            'coa.edit',
+            'coa.delete',
+
+            // Master Unit of Measure (UOM) management
+            'uom.view',
+            'uom.create',
+            'uom.edit',
+            'uom.delete',
         ];
 
         foreach ($permissions as $permission) {
@@ -98,6 +122,22 @@ class RolePermissionSeeder extends Seeder
             'exchange_rates.edit',
             'exchange_rates.delete',
             'exchange_rates.sync',
+            'budgets.view',
+            'budgets.create',
+            'budgets.edit',
+            'budgets.delete',
+            'budget_classifications.view',
+            'budget_classifications.create',
+            'budget_classifications.edit',
+            'budget_classifications.delete',
+            'coa.view',
+            'coa.create',
+            'coa.edit',
+            'coa.delete',
+            'uom.view',
+            'uom.create',
+            'uom.edit',
+            'uom.delete',
         ]);
 
         $userRole = Role::firstOrCreate([
