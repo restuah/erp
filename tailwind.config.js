@@ -23,6 +23,9 @@ export default {
                 sans: ['Plus Jakarta Sans', 'Inter', ...defaultTheme.fontFamily.sans],
                 mono: ['Fira Code', ...defaultTheme.fontFamily.mono],
             },
+            spacing: {
+                4.5: '1.125rem',
+            },
             colors: {
                 brand: {
                     50: '#EFF6FF',
