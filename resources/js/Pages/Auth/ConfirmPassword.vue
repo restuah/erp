@@ -1,9 +1,9 @@
 <script setup>
-import GuestLayout from '@/Layouts/GuestLayout.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import PasswordInput from '@/Components/PasswordInput.vue';
+import Button from '@/Components/Atoms/Button.vue';
+import InputError from '@/Components/Atoms/InputError.vue';
+import InputLabel from '@/Components/Atoms/InputLabel.vue';
+import PasswordInput from '@/Components/Atoms/PasswordInput.vue';
+import GuestTemplate from '@/Components/Templates/GuestTemplate.vue';
 import { Head, useForm } from '@inertiajs/vue3';
 
 const form = useForm({
@@ -18,7 +18,7 @@ const submit = () => {
 </script>
 
 <template>
-    <GuestLayout>
+    <GuestTemplate>
         <Head title="Confirm Password" />
 
         <div class="mb-4 text-sm text-gray-600 dark:text-gray-400">
@@ -41,14 +41,15 @@ const submit = () => {
             </div>
 
             <div class="mt-4 flex justify-end">
-                <PrimaryButton
+                <Button
+                    variant="primary"
                     class="ms-4"
                     :class="{ 'opacity-25': form.processing }"
                     :disabled="form.processing"
                 >
                     Confirm
-                </PrimaryButton>
+                </Button>
             </div>
         </form>
-    </GuestLayout>
+    </GuestTemplate>
 </template>

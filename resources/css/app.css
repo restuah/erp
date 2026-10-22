@@ -2,9 +2,63 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+    html {
+        color-scheme: light;
+        font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    html.dark {
+        color-scheme: dark;
+    }
+
+    /* Enterprise Financial Numbers */
+    .tabular-nums {
+        font-variant-numeric: tabular-nums;
+    }
+
+    /* Clean Business Scrollbars */
+    ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: rgba(148, 163, 184, 0.4);
+        border-radius: 9999px;
+    }
+
+    .dark ::-webkit-scrollbar-thumb {
+        background: rgba(100, 116, 139, 0.4);
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: rgba(148, 163, 184, 0.7);
+    }
+
+    .dark ::-webkit-scrollbar-thumb:hover {
+        background: rgba(100, 116, 139, 0.7);
+    }
+}
+
 .grid-cols-7,
 .calendar-grid {
     display: grid !important;
     grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
 }
 
+/* Utility to hide scrollbar on horizontal tabs */
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}

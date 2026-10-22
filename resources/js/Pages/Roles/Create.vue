@@ -1,11 +1,11 @@
 <script setup>
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import SecondaryButton from '@/Components/SecondaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
-import Checkbox from '@/Components/Checkbox.vue';
+import Button from '@/Components/Atoms/Button.vue';
+import Checkbox from '@/Components/Atoms/Checkbox.vue';
+import InputError from '@/Components/Atoms/InputError.vue';
+import InputLabel from '@/Components/Atoms/InputLabel.vue';
+import TextInput from '@/Components/Atoms/TextInput.vue';
+import PageHeader from '@/Components/Organisms/PageHeader.vue';
+import AuthenticatedTemplate from '@/Components/Templates/AuthenticatedTemplate.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import { computed } from 'vue';
 
@@ -66,38 +66,42 @@ const submit = () => {
 <template>
     <Head title="Tambah Peran Baru" />
 
-    <AuthenticatedLayout>
+    <AuthenticatedTemplate>
         <template #header>
-            <div class="flex items-center justify-between">
-                <div>
-                    <h1 class="text-xl font-bold text-gray-900 dark:text-white">
-                        Tambah Peran & Tetapkan Hak Akses
-                    </h1>
-                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                        Buat peran baru dan pilih hak akses yang diperbolehkan
-                        untuk peran ini.
-                    </p>
-                </div>
-                <Link :href="route('roles.index')">
-                    <SecondaryButton class="flex items-center gap-1.5">
-                        <svg
-                            class="h-4 w-4"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
+            <PageHeader
+                title="Tambah Peran & Tetapkan Hak Akses"
+                subtitle="Buat peran baru dan pilih hak akses yang diperbolehkan untuk peran ini."
+                :breadcrumbs="[
+                    { label: 'Dashboard', href: route('dashboard') },
+                    { label: 'Peran & Akses', href: route('roles.index') },
+                    { label: 'Tambah Baru' },
+                ]"
+            >
+                <template #actions>
+                    <Link :href="route('roles.index')">
+                        <Button
+                            variant="secondary"
+                            class="flex items-center gap-1.5"
                         >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M10 19l-7-7m0 0l7-7m-7 7h18"
-                            />
-                        </svg>
-                        Kembali
-                    </SecondaryButton>
-                </Link>
-            </div>
+                            <svg
+                                class="h-4 w-4"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                                />
+                            </svg>
+                            <span>Kembali</span>
+                        </Button>
+                    </Link>
+                </template>
+            </PageHeader>
         </template>
 
         <form @submit.prevent="submit" class="mx-auto max-w-5xl space-y-6">
@@ -161,7 +165,7 @@ const submit = () => {
                             Centang izin yang ingin diberikan ke peran ini.
                             Terpilih:
                             <strong
-                                class="text-indigo-600 dark:text-indigo-400"
+                                class="text-blue-600 dark:text-blue-400"
                                 >{{ form.permissions.length }}</strong
                             >
                             dari {{ permissions.length }} izin.
@@ -204,7 +208,7 @@ const submit = () => {
                             <button
                                 type="button"
                                 @click="toggleGroup(perms)"
-                                class="text-[11px] font-semibold text-indigo-600 hover:underline dark:text-indigo-400"
+                                class="text-[11px] font-semibold text-blue-600 hover:underline dark:text-blue-400"
                             >
                                 {{
                                     isGroupAllSelected(perms)
@@ -222,7 +226,7 @@ const submit = () => {
                                 <Checkbox
                                     v-model:checked="form.permissions"
                                     :value="perm.name"
-                                    class="mt-0.5 rounded text-indigo-600 focus:ring-indigo-500"
+                                    class="mt-0.5 rounded text-blue-600 focus:ring-blue-500"
                                 />
                                 <div class="text-xs leading-tight">
                                     <span
@@ -242,12 +246,12 @@ const submit = () => {
             <!-- Submit buttons -->
             <div class="flex items-center justify-end gap-3 pt-4">
                 <Link :href="route('roles.index')">
-                    <SecondaryButton>Batal</SecondaryButton>
+                    <Button variant="secondary">Batal</Button>
                 </Link>
-                <PrimaryButton :disabled="form.processing">
+                <Button variant="primary" :disabled="form.processing">
                     Simpan Peran & Izin
-                </PrimaryButton>
+                </Button>
             </div>
         </form>
-    </AuthenticatedLayout>
+    </AuthenticatedTemplate>
 </template>

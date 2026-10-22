@@ -11,10 +11,13 @@ use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RecycleBinController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\TermOfPaymentController;
 use App\Http\Controllers\TwoFactorAuthenticationController;
 use App\Http\Controllers\UnitOfMeasureController;
 use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Application;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -27,9 +30,9 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -93,6 +96,13 @@ Route::middleware('auth')->group(function () {
 
         // Master Satuan (Unit of Measures)
         Route::resource('unit-of-measures', UnitOfMeasureController::class)->except(['create', 'show', 'edit']);
+
+        // Master Term of Payment (TOP)
+        Route::resource('term-of-payments', TermOfPaymentController::class)->except(['create', 'show', 'edit']);
+
+        // Master Supplier (Direct & Indirect)
+        Route::get('suppliers/generate-code', [SupplierController::class, 'generateCode'])->name('suppliers.generate-code');
+        Route::resource('suppliers', SupplierController::class)->except(['create', 'show', 'edit']);
     });
 });
 

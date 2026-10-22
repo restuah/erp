@@ -1,12 +1,12 @@
 <script setup>
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import SecondaryButton from '@/Components/SecondaryButton.vue';
-import PasswordInput from '@/Components/PasswordInput.vue';
-import TextInput from '@/Components/TextInput.vue';
-import Checkbox from '@/Components/Checkbox.vue';
+import Button from '@/Components/Atoms/Button.vue';
+import Checkbox from '@/Components/Atoms/Checkbox.vue';
+import InputError from '@/Components/Atoms/InputError.vue';
+import InputLabel from '@/Components/Atoms/InputLabel.vue';
+import PasswordInput from '@/Components/Atoms/PasswordInput.vue';
+import TextInput from '@/Components/Atoms/TextInput.vue';
+import PageHeader from '@/Components/Organisms/PageHeader.vue';
+import AuthenticatedTemplate from '@/Components/Templates/AuthenticatedTemplate.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
 
@@ -52,38 +52,42 @@ const submit = () => {
 <template>
     <Head title="Tambah Pengguna Baru" />
 
-    <AuthenticatedLayout>
+    <AuthenticatedTemplate>
         <template #header>
-            <div class="flex items-center justify-between">
-                <div>
-                    <h1 class="text-xl font-bold text-gray-900 dark:text-white">
-                        Tambah Pengguna Baru
-                    </h1>
-                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                        Daftarkan akun pengguna baru beserta foto profil dan
-                        peran hak aksesnya.
-                    </p>
-                </div>
-                <Link :href="route('users.index')">
-                    <SecondaryButton class="flex items-center gap-1.5">
-                        <svg
-                            class="h-4 w-4"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
+            <PageHeader
+                title="Tambah Pengguna Baru"
+                subtitle="Buat akun pengguna baru dan tentukan hak akses peran sistem ERP."
+                :breadcrumbs="[
+                    { label: 'Dashboard', href: route('dashboard') },
+                    { label: 'Pengguna', href: route('users.index') },
+                    { label: 'Tambah Baru' },
+                ]"
+            >
+                <template #actions>
+                    <Link :href="route('users.index')">
+                        <Button
+                            variant="secondary"
+                            class="flex items-center gap-1.5"
                         >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M10 19l-7-7m0 0l7-7m-7 7h18"
-                            />
-                        </svg>
-                        Kembali
-                    </SecondaryButton>
-                </Link>
-            </div>
+                            <svg
+                                class="h-4 w-4"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                                />
+                            </svg>
+                            <span>Kembali</span>
+                        </Button>
+                    </Link>
+                </template>
+            </PageHeader>
         </template>
 
         <form @submit.prevent="submit" class="mx-auto max-w-4xl space-y-6">
@@ -138,13 +142,14 @@ const submit = () => {
                                 class="hidden"
                                 @change="onAvatarSelected"
                             />
-                            <SecondaryButton
+                            <Button
+                                variant="secondary"
                                 type="button"
                                 @click="avatarInput.click()"
                                 class="text-xs"
                             >
                                 Unggah Foto
-                            </SecondaryButton>
+                            </Button>
                             <button
                                 v-if="avatarPreview"
                                 type="button"
@@ -244,7 +249,7 @@ const submit = () => {
                         <Checkbox
                             v-model:checked="form.roles"
                             :value="role.name"
-                            class="rounded text-indigo-600 focus:ring-indigo-500"
+                            class="rounded text-blue-600 focus:ring-blue-500"
                         />
                         <span
                             class="text-sm font-semibold text-gray-800 dark:text-gray-200"
@@ -259,12 +264,12 @@ const submit = () => {
             <!-- Submit buttons -->
             <div class="flex items-center justify-end gap-3 pt-4">
                 <Link :href="route('users.index')">
-                    <SecondaryButton>Batal</SecondaryButton>
+                    <Button variant="secondary">Batal</Button>
                 </Link>
-                <PrimaryButton :disabled="form.processing">
+                <Button variant="primary" :disabled="form.processing">
                     Simpan Pengguna
-                </PrimaryButton>
+                </Button>
             </div>
         </form>
-    </AuthenticatedLayout>
+    </AuthenticatedTemplate>
 </template>

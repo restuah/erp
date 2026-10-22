@@ -1,10 +1,10 @@
 <script setup>
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import SecondaryButton from '@/Components/SecondaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
+import Button from '@/Components/Atoms/Button.vue';
+import InputError from '@/Components/Atoms/InputError.vue';
+import InputLabel from '@/Components/Atoms/InputLabel.vue';
+import TextInput from '@/Components/Atoms/TextInput.vue';
+import PageHeader from '@/Components/Organisms/PageHeader.vue';
+import AuthenticatedTemplate from '@/Components/Templates/AuthenticatedTemplate.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 
 const props = defineProps({
@@ -24,37 +24,43 @@ const submit = () => {
 <template>
     <Head :title="`Edit Izin: ${permission.name}`" />
 
-    <AuthenticatedLayout>
+    <AuthenticatedTemplate>
         <template #header>
-            <div class="flex items-center justify-between">
-                <div>
-                    <h1 class="text-xl font-bold text-gray-900 dark:text-white">
-                        Edit Izin Sistem
-                    </h1>
-                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                        Ubah detail informasi izin sistem.
-                    </p>
-                </div>
-                <Link :href="route('permissions.index')">
-                    <SecondaryButton class="flex items-center gap-1.5">
-                        <svg
-                            class="h-4 w-4"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
+            <PageHeader
+                title="Edit Izin Sistem"
+                :subtitle="`Ubah detail informasi izin ${permission.name}.`"
+                :breadcrumbs="[
+                    { label: 'Dashboard', href: route('dashboard') },
+                    { label: 'Peran & Akses', href: route('roles.index') },
+                    { label: 'Hak Akses', href: route('permissions.index') },
+                    { label: `Edit ${permission.name}` },
+                ]"
+            >
+                <template #actions>
+                    <Link :href="route('permissions.index')">
+                        <Button
+                            variant="secondary"
+                            class="flex items-center gap-1.5"
                         >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M10 19l-7-7m0 0l7-7m-7 7h18"
-                            />
-                        </svg>
-                        Kembali
-                    </SecondaryButton>
-                </Link>
-            </div>
+                            <svg
+                                class="h-4 w-4"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                                />
+                            </svg>
+                            <span>Kembali</span>
+                        </Button>
+                    </Link>
+                </template>
+            </PageHeader>
         </template>
 
         <div class="mx-auto max-w-2xl">
@@ -97,14 +103,14 @@ const submit = () => {
                         class="flex items-center justify-end gap-3 border-t border-gray-100 pt-4 dark:border-gray-700/60"
                     >
                         <Link :href="route('permissions.index')">
-                            <SecondaryButton>Batal</SecondaryButton>
+                            <Button variant="secondary">Batal</Button>
                         </Link>
-                        <PrimaryButton :disabled="form.processing">
+                        <Button variant="primary" :disabled="form.processing">
                             Simpan Perubahan
-                        </PrimaryButton>
+                        </Button>
                     </div>
                 </form>
             </div>
         </div>
-    </AuthenticatedLayout>
+    </AuthenticatedTemplate>
 </template>

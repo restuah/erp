@@ -82,6 +82,18 @@ class RolePermissionSeeder extends Seeder
             'uom.create',
             'uom.edit',
             'uom.delete',
+
+            // Master Term of Payment (TOP) management
+            'term_of_payments.view',
+            'term_of_payments.create',
+            'term_of_payments.edit',
+            'term_of_payments.delete',
+
+            // Master Supplier management
+            'suppliers.view',
+            'suppliers.create',
+            'suppliers.edit',
+            'suppliers.delete',
         ];
 
         foreach ($permissions as $permission) {
@@ -138,6 +150,14 @@ class RolePermissionSeeder extends Seeder
             'uom.create',
             'uom.edit',
             'uom.delete',
+            'term_of_payments.view',
+            'term_of_payments.create',
+            'term_of_payments.edit',
+            'term_of_payments.delete',
+            'suppliers.view',
+            'suppliers.create',
+            'suppliers.edit',
+            'suppliers.delete',
         ]);
 
         $userRole = Role::firstOrCreate([

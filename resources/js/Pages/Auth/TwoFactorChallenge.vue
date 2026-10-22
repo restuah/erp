@@ -1,8 +1,7 @@
 <script setup>
-import GuestLayout from '@/Layouts/GuestLayout.vue';
-import InputError from '@/Components/InputError.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import ThemeToggle from '@/Components/ThemeToggle.vue';
+import Button from '@/Components/Atoms/Button.vue';
+import InputError from '@/Components/Atoms/InputError.vue';
+import GuestTemplate from '@/Components/Templates/GuestTemplate.vue';
 import { Head, router, useForm } from '@inertiajs/vue3';
 import { nextTick, onMounted, onUnmounted, ref } from 'vue';
 
@@ -149,7 +148,7 @@ const cancelChallenge = () => {
 </script>
 
 <template>
-    <GuestLayout>
+    <GuestTemplate>
         <Head title="Verifikasi Dua Faktor" />
 
         <!-- Header above form with Theme Toggle -->
@@ -158,7 +157,7 @@ const cancelChallenge = () => {
         >
             <div class="flex items-center gap-2.5">
                 <div
-                    class="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 dark:bg-indigo-950/60 dark:text-indigo-400"
+                    class="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-50 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400"
                 >
                     <svg
                         class="h-5 w-5"
@@ -185,7 +184,6 @@ const cancelChallenge = () => {
                     </p>
                 </div>
             </div>
-            <ThemeToggle />
         </div>
 
         <div class="text-center">
@@ -193,7 +191,7 @@ const cancelChallenge = () => {
                 Silakan masukkan 6 digit kode verifikasi yang dikirimkan ke:
             </p>
             <p
-                class="mt-1 text-sm font-semibold text-indigo-600 dark:text-indigo-400"
+                class="mt-1 text-sm font-semibold text-blue-600 dark:text-blue-400"
             >
                 {{ email }}
             </p>
@@ -215,7 +213,7 @@ const cancelChallenge = () => {
                     :value="digit"
                     @input="onDigitInput(idx, $event)"
                     @keydown="onDigitKeydown(idx, $event)"
-                    class="h-12 w-11 rounded-lg border border-gray-300 text-center text-xl font-bold tracking-tight text-gray-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:focus:border-indigo-400 sm:h-14 sm:w-12"
+                    class="h-12 w-11 rounded-lg border border-gray-300 text-center text-xl font-bold tracking-tight text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:focus:border-blue-400 sm:h-14 sm:w-12"
                 />
             </div>
 
@@ -229,7 +227,7 @@ const cancelChallenge = () => {
                 >
                     Kirim ulang kode dalam
                     <span
-                        class="font-semibold text-indigo-600 dark:text-indigo-400"
+                        class="font-semibold text-blue-600 dark:text-blue-400"
                         >{{ currentCooldown }}s</span
                     >
                 </p>
@@ -238,7 +236,7 @@ const cancelChallenge = () => {
                     type="button"
                     @click="resendOtp"
                     :disabled="isResending"
-                    class="text-xs font-semibold text-indigo-600 hover:text-indigo-700 hover:underline disabled:opacity-50 dark:text-indigo-400 dark:hover:text-indigo-300"
+                    class="text-xs font-semibold text-blue-600 hover:text-blue-700 hover:underline disabled:opacity-50 dark:text-blue-400 dark:hover:text-blue-300"
                 >
                     {{
                         isResending
@@ -249,8 +247,9 @@ const cancelChallenge = () => {
             </div>
 
             <div class="mt-6 flex flex-col gap-2.5">
-                <PrimaryButton
-                    class="w-full justify-center py-2.5"
+                <Button
+                    variant="primary"
+                    class="w-full justify-center py-2.5 text-xs font-semibold"
                     :disabled="form.processing || form.otp.length < 6"
                 >
                     <svg
@@ -274,7 +273,7 @@ const cancelChallenge = () => {
                         ></path>
                     </svg>
                     Verifikasi & Masuk
-                </PrimaryButton>
+                </Button>
 
                 <button
                     type="button"
@@ -286,5 +285,5 @@ const cancelChallenge = () => {
                 </button>
             </div>
         </form>
-    </GuestLayout>
+    </GuestTemplate>
 </template>

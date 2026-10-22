@@ -1,10 +1,9 @@
 <script setup>
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import Pagination from '@/Components/Pagination.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import DangerButton from '@/Components/DangerButton.vue';
-import SecondaryButton from '@/Components/SecondaryButton.vue';
-import Modal from '@/Components/Modal.vue';
+import Button from '@/Components/Atoms/Button.vue';
+import Modal from '@/Components/Atoms/Modal.vue';
+import Pagination from '@/Components/Molecules/Pagination.vue';
+import PageHeader from '@/Components/Organisms/PageHeader.vue';
+import AuthenticatedTemplate from '@/Components/Templates/AuthenticatedTemplate.vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { ref, watch } from 'vue';
 
@@ -52,40 +51,39 @@ const deletePermission = () => {
 <template>
     <Head title="Manajemen Izin Sistem" />
 
-    <AuthenticatedLayout>
+    <AuthenticatedTemplate>
         <template #header>
-            <div
-                class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
+            <PageHeader
+                title="Manajemen Izin Sistem (Permissions)"
+                subtitle="Kelola hak akses spesifik untuk modul-modul di dalam sistem ERP."
+                :breadcrumbs="[
+                    { label: 'Dashboard', href: route('dashboard') },
+                    { label: 'Peran & Akses', href: route('roles.index') },
+                    { label: 'Hak Akses' },
+                ]"
             >
-                <div>
-                    <h1 class="text-xl font-bold text-gray-900 dark:text-white">
-                        Manajemen Izin Sistem (Permissions)
-                    </h1>
-                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                        Kelola hak akses spesifik untuk modul-modul di dalam
-                        sistem ERP.
-                    </p>
-                </div>
-                <Link :href="route('permissions.create')">
-                    <PrimaryButton class="flex items-center gap-2">
-                        <svg
-                            class="h-4 w-4"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                        >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M12 4v16m8-8H4"
-                            />
-                        </svg>
-                        Tambah Izin
-                    </PrimaryButton>
-                </Link>
-            </div>
+                <template #actions>
+                    <Link :href="route('permissions.create')">
+                        <Button variant="primary" class="flex items-center gap-2">
+                            <svg
+                                class="h-4 w-4"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M12 4v16m8-8H4"
+                                />
+                            </svg>
+                            <span>Tambah Izin</span>
+                        </Button>
+                    </Link>
+                </template>
+            </PageHeader>
         </template>
 
         <div class="space-y-6">
@@ -116,7 +114,7 @@ const deletePermission = () => {
                         v-model="search"
                         type="text"
                         placeholder="Cari nama izin atau guard..."
-                        class="block w-full rounded-lg border border-gray-300 bg-gray-50 py-2 pe-3 ps-10 text-sm text-gray-900 focus:border-indigo-500 focus:bg-white focus:ring-1 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-700/50 dark:text-white dark:placeholder-gray-400 dark:focus:border-indigo-400"
+                        class="block w-full rounded-lg border border-gray-300 bg-gray-50 py-2 pe-3 ps-10 text-sm text-gray-900 focus:border-blue-500 focus:bg-white focus:ring-1 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700/50 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-400"
                     />
                 </div>
                 <div class="text-xs text-gray-500 dark:text-gray-400">
@@ -163,7 +161,7 @@ const deletePermission = () => {
                                     class="px-6 py-4 font-semibold text-gray-900 dark:text-white"
                                 >
                                     <span
-                                        class="inline-flex items-center gap-1.5 rounded-md bg-indigo-50 px-2.5 py-1 font-mono text-xs font-medium text-indigo-700 dark:bg-indigo-950/60 dark:text-indigo-300"
+                                        class="inline-flex items-center gap-1.5 rounded-md bg-blue-50 px-2.5 py-1 font-mono text-xs font-medium text-blue-700 dark:bg-blue-950/60 dark:text-blue-300"
                                     >
                                         {{ item.name }}
                                     </span>
@@ -199,7 +197,7 @@ const deletePermission = () => {
                                                     item.id,
                                                 )
                                             "
-                                            class="rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-gray-100 hover:text-indigo-600 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-indigo-400"
+                                            class="rounded-lg p-1.5 text-gray-500 transition-colors hover:bg-gray-100 hover:text-blue-600 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-blue-400"
                                             title="Edit Izin"
                                         >
                                             <svg
@@ -280,14 +278,17 @@ const deletePermission = () => {
                     >? Tindakan ini akan menerapkan Soft Delete ke database.
                 </p>
                 <div class="mt-6 flex justify-end gap-3">
-                    <SecondaryButton @click="showDeleteModal = false">
+                    <Button
+                        variant="secondary"
+                        @click="showDeleteModal = false"
+                    >
                         Batal
-                    </SecondaryButton>
-                    <DangerButton @click="deletePermission">
+                    </Button>
+                    <Button variant="danger" @click="deletePermission">
                         Ya, Hapus
-                    </DangerButton>
+                    </Button>
                 </div>
             </div>
         </Modal>
-    </AuthenticatedLayout>
+    </AuthenticatedTemplate>
 </template>

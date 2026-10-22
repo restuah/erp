@@ -19,7 +19,7 @@ test('profile information can be updated', function () {
         ->actingAs($user)
         ->patch('/profile', [
             'name' => 'Test User',
-            'email' => 'test@example.com',
+            'email' => $user->email,
         ]);
 
     $response
@@ -29,8 +29,49 @@ test('profile information can be updated', function () {
     $user->refresh();
 
     $this->assertSame('Test User', $user->name);
-    $this->assertSame('test@example.com', $user->email);
-    $this->assertNull($user->email_verified_at);
+});
+
+test('email change triggers otp flow and can be verified', function () {
+    \Illuminate\Support\Facades\Notification::fake();
+    $user = User::factory()->create();
+
+    $response = $this
+        ->actingAs($user)
+        ->patch('/profile', [
+            'name' => $user->name,
+            'email' => 'new-email@example.com',
+        ]);
+
+    $response
+        ->assertSessionHasNoErrors()
+        ->assertRedirect('/profile');
+
+    // OTP was stored in cache
+    $cacheKey = 'email_otp_'.$user->id;
+    $cacheData = \Illuminate\Support\Facades\Cache::get($cacheKey);
+    $this->assertNotNull($cacheData);
+    $this->assertSame('new-email@example.com', $cacheData['email']);
+
+    // Set known OTP in cache and verify
+    \Illuminate\Support\Facades\Cache::put($cacheKey, [
+        'email' => 'new-email@example.com',
+        'otp' => \Illuminate\Support\Facades\Hash::make('123456'),
+        'attempts' => 0,
+        'sent_at' => now()->timestamp,
+    ], now()->addMinutes(15));
+
+    $verifyResponse = $this
+        ->actingAs($user)
+        ->post('/profile/email/verify-otp', [
+            'otp' => '123456',
+        ]);
+
+    $verifyResponse
+        ->assertSessionHasNoErrors()
+        ->assertRedirect('/profile');
+
+    $user->refresh();
+    $this->assertSame('new-email@example.com', $user->email);
 });
 
 test('email verification status is unchanged when the email address is unchanged', function () {

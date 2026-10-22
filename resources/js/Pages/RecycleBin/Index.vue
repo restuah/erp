@@ -1,10 +1,9 @@
 <script setup>
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import Pagination from '@/Components/Pagination.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import DangerButton from '@/Components/DangerButton.vue';
-import SecondaryButton from '@/Components/SecondaryButton.vue';
-import Modal from '@/Components/Modal.vue';
+import Button from '@/Components/Atoms/Button.vue';
+import Modal from '@/Components/Atoms/Modal.vue';
+import Pagination from '@/Components/Molecules/Pagination.vue';
+import PageHeader from '@/Components/Organisms/PageHeader.vue';
+import AuthenticatedTemplate from '@/Components/Templates/AuthenticatedTemplate.vue';
 import { Head, router } from '@inertiajs/vue3';
 import { ref, watch } from 'vue';
 
@@ -103,83 +102,67 @@ const executeEmptyTrash = () => {
 <template>
     <Head title="Tempat Sampah (Recycle Bin)" />
 
-    <AuthenticatedLayout>
+    <AuthenticatedTemplate>
         <template #header>
-            <div
-                class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
+            <PageHeader
+                title="Tempat Sampah (Recycle Bin)"
+                subtitle="Data yang dihapus sementara (Soft Delete). Anda dapat memulihkan (Restore) atau menghapus data secara permanen."
+                :breadcrumbs="[
+                    { label: 'Dashboard', href: route('dashboard') },
+                    { label: 'Tempat Sampah' },
+                ]"
             >
-                <div>
-                    <h1
-                        class="flex items-center gap-2.5 text-xl font-bold text-gray-900 dark:text-white"
-                    >
-                        <svg
-                            class="h-6 w-6 text-red-500 dark:text-red-400"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
+                <template #actions>
+                    <div v-if="items.total > 0" class="flex items-center gap-2">
+                        <Button
+                            variant="secondary"
+                            size="sm"
+                            @click="showRestoreAllModal = true"
                         >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                            />
-                        </svg>
-                        Tempat Sampah (Recycle Bin)
-                    </h1>
-                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                        Data yang dihapus sementara (Soft Delete). Anda dapat
-                        memulihkan (*Restore*) atau menghapus data secara
-                        permanen.
-                    </p>
-                </div>
-
-                <div v-if="items.total > 0" class="flex items-center gap-2">
-                    <button
-                        type="button"
-                        @click="showRestoreAllModal = true"
-                        class="shadow-xs inline-flex items-center gap-1.5 rounded-lg border border-gray-300 bg-white px-3 py-2 text-xs font-semibold text-gray-700 transition-colors hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
-                    >
-                        <svg
-                            class="h-4 w-4 text-emerald-600 dark:text-emerald-400"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
+                            <template #icon-left>
+                                <svg
+                                    class="h-4 w-4 text-emerald-600 dark:text-emerald-400"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                                    />
+                                </svg>
+                            </template>
+                            <span>Pulihkan Semua</span>
+                        </Button>
+                        <Button
+                            variant="danger"
+                            size="sm"
+                            @click="showEmptyTrashModal = true"
                         >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                            />
-                        </svg>
-                        Pulihkan Semua
-                    </button>
-                    <button
-                        type="button"
-                        @click="showEmptyTrashModal = true"
-                        class="shadow-xs inline-flex items-center gap-1.5 rounded-lg border border-red-300 bg-red-50 px-3 py-2 text-xs font-semibold text-red-700 transition-colors hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-red-500 dark:border-red-800/60 dark:bg-red-950/40 dark:text-red-300 dark:hover:bg-red-900/50"
-                    >
-                        <svg
-                            class="h-4 w-4 text-red-600 dark:text-red-400"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                        >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                            />
-                        </svg>
-                        Kosongkan Tempat Sampah
-                    </button>
-                </div>
-            </div>
+                            <template #icon-left>
+                                <svg
+                                    class="h-4 w-4"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                                    />
+                                </svg>
+                            </template>
+                            <span>Kosongkan Tempat Sampah</span>
+                        </Button>
+                    </div>
+                </template>
+            </PageHeader>
         </template>
 
         <div class="space-y-6">
@@ -192,7 +175,7 @@ const executeEmptyTrash = () => {
                         class="group inline-flex items-center gap-2 border-b-2 px-1 py-3 text-sm font-medium transition-colors"
                         :class="
                             activeTab === 'users'
-                                ? 'border-indigo-600 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400'
+                                ? 'border-blue-600 text-blue-600 dark:border-blue-400 dark:text-blue-400'
                                 : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
                         "
                     >
@@ -229,7 +212,7 @@ const executeEmptyTrash = () => {
                         class="group inline-flex items-center gap-2 border-b-2 px-1 py-3 text-sm font-medium transition-colors"
                         :class="
                             activeTab === 'roles'
-                                ? 'border-indigo-600 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400'
+                                ? 'border-blue-600 text-blue-600 dark:border-blue-400 dark:text-blue-400'
                                 : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
                         "
                     >
@@ -266,7 +249,7 @@ const executeEmptyTrash = () => {
                         class="group inline-flex items-center gap-2 border-b-2 px-1 py-3 text-sm font-medium transition-colors"
                         :class="
                             activeTab === 'permissions'
-                                ? 'border-indigo-600 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400'
+                                ? 'border-blue-600 text-blue-600 dark:border-blue-400 dark:text-blue-400'
                                 : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
                         "
                     >
@@ -303,7 +286,7 @@ const executeEmptyTrash = () => {
                         class="group inline-flex items-center gap-2 border-b-2 px-1 py-3 text-sm font-medium transition-colors"
                         :class="
                             activeTab === 'currencies'
-                                ? 'border-indigo-600 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400'
+                                ? 'border-blue-600 text-blue-600 dark:border-blue-400 dark:text-blue-400'
                                 : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
                         "
                     >
@@ -340,7 +323,7 @@ const executeEmptyTrash = () => {
                         class="group inline-flex items-center gap-2 border-b-2 px-1 py-3 text-sm font-medium transition-colors"
                         :class="
                             activeTab === 'budgets'
-                                ? 'border-indigo-600 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400'
+                                ? 'border-blue-600 text-blue-600 dark:border-blue-400 dark:text-blue-400'
                                 : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
                         "
                     >
@@ -377,7 +360,7 @@ const executeEmptyTrash = () => {
                         class="group inline-flex items-center gap-2 border-b-2 px-1 py-3 text-sm font-medium transition-colors"
                         :class="
                             activeTab === 'budget_classifications'
-                                ? 'border-indigo-600 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400'
+                                ? 'border-blue-600 text-blue-600 dark:border-blue-400 dark:text-blue-400'
                                 : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
                         "
                     >
@@ -414,7 +397,7 @@ const executeEmptyTrash = () => {
                         class="group inline-flex items-center gap-2 border-b-2 px-1 py-3 text-sm font-medium transition-colors"
                         :class="
                             activeTab === 'chart_of_accounts'
-                                ? 'border-indigo-600 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400'
+                                ? 'border-blue-600 text-blue-600 dark:border-blue-400 dark:text-blue-400'
                                 : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
                         "
                     >
@@ -451,7 +434,7 @@ const executeEmptyTrash = () => {
                         class="group inline-flex items-center gap-2 border-b-2 px-1 py-3 text-sm font-medium transition-colors"
                         :class="
                             activeTab === 'unit_of_measures'
-                                ? 'border-indigo-600 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400'
+                                ? 'border-blue-600 text-blue-600 dark:border-blue-400 dark:text-blue-400'
                                 : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
                         "
                     >
@@ -479,6 +462,80 @@ const executeEmptyTrash = () => {
                             "
                         >
                             {{ counts.unit_of_measures }}
+                        </span>
+                    </button>
+
+                    <button
+                        type="button"
+                        @click="switchTab('term_of_payments')"
+                        class="group inline-flex items-center gap-2 border-b-2 px-1 py-3 text-sm font-medium transition-colors"
+                        :class="
+                            activeTab === 'term_of_payments'
+                                ? 'border-blue-600 text-blue-600 dark:border-blue-400 dark:text-blue-400'
+                                : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
+                        "
+                    >
+                        <svg
+                            class="h-4 w-4"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                            />
+                        </svg>
+                        Term of Payment (TOP)
+                        <span
+                            class="rounded-full px-2 py-0.5 text-xs font-bold"
+                            :class="
+                                counts.term_of_payments > 0
+                                    ? 'bg-red-100 text-red-700 dark:bg-red-950/60 dark:text-red-300'
+                                    : 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400'
+                            "
+                        >
+                            {{ counts.term_of_payments }}
+                        </span>
+                    </button>
+
+                    <button
+                        type="button"
+                        @click="switchTab('suppliers')"
+                        class="group inline-flex items-center gap-2 border-b-2 px-1 py-3 text-sm font-medium transition-colors"
+                        :class="
+                            activeTab === 'suppliers'
+                                ? 'border-blue-600 text-blue-600 dark:border-blue-400 dark:text-blue-400'
+                                : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
+                        "
+                    >
+                        <svg
+                            class="h-4 w-4"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M19 16l-1.5-4.5A2 2 0 0015.6 10H13V5a1 1 0 00-1-1H4a1 1 0 00-1 1v11a2 2 0 002 2h1a2 2 0 104 0h6a2 2 0 104 0h1a1 1 0 001-1v-2zM6 18a1 1 0 11-2 0 1 1 0 012 0zm12 0a1 1 0 11-2 0 1 1 0 012 0z"
+                            />
+                        </svg>
+                        Supplier
+                        <span
+                            class="rounded-full px-2 py-0.5 text-xs font-bold"
+                            :class="
+                                counts.suppliers > 0
+                                    ? 'bg-red-100 text-red-700 dark:bg-red-950/60 dark:text-red-300'
+                                    : 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400'
+                            "
+                        >
+                            {{ counts.suppliers }}
                         </span>
                     </button>
                 </nav>
@@ -511,7 +568,7 @@ const executeEmptyTrash = () => {
                         v-model="search"
                         type="text"
                         :placeholder="`Cari di tempat sampah ${activeTab}...`"
-                        class="block w-full rounded-lg border border-gray-300 bg-gray-50 py-2 pe-3 ps-10 text-sm text-gray-900 focus:border-indigo-500 focus:bg-white focus:ring-1 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-700/50 dark:text-white dark:placeholder-gray-400 dark:focus:border-indigo-400"
+                        class="block w-full rounded-lg border border-gray-300 bg-gray-50 py-2 pe-3 ps-10 text-sm text-gray-900 focus:border-blue-500 focus:bg-white focus:ring-1 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700/50 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-400"
                     />
                 </div>
                 <div class="text-xs text-gray-500 dark:text-gray-400">
@@ -901,16 +958,18 @@ const executeEmptyTrash = () => {
                             <tr
                                 v-for="c in items.data"
                                 :key="c.id"
-                                class="transition-colors hover:bg-gray-50/70 dark:hover:bg-gray-750"
+                                class="dark:hover:bg-gray-750 transition-colors hover:bg-gray-50/70"
                             >
                                 <td class="px-6 py-4">
                                     <span
-                                        class="inline-flex items-center rounded-md bg-indigo-50 px-2.5 py-1 text-xs font-bold tracking-wider text-indigo-700 ring-1 ring-inset ring-indigo-700/10 dark:bg-indigo-950/50 dark:text-indigo-300 dark:ring-indigo-400/20"
+                                        class="inline-flex items-center rounded-md bg-blue-50 px-2.5 py-1 text-xs font-bold tracking-wider text-blue-700 ring-1 ring-inset ring-blue-700/10 dark:bg-blue-950/50 dark:text-blue-300 dark:ring-blue-400/20"
                                     >
                                         {{ c.code }}
                                     </span>
                                 </td>
-                                <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">
+                                <td
+                                    class="px-6 py-4 font-medium text-gray-900 dark:text-white"
+                                >
                                     {{ c.name }}
                                 </td>
                                 <td
@@ -1006,26 +1065,32 @@ const executeEmptyTrash = () => {
                             <tr
                                 v-for="b in items.data"
                                 :key="b.id"
-                                class="transition-colors hover:bg-gray-50/70 dark:hover:bg-gray-750"
+                                class="dark:hover:bg-gray-750 transition-colors hover:bg-gray-50/70"
                             >
                                 <td class="px-6 py-4">
                                     <div class="flex items-center gap-2.5">
                                         <span
-                                            class="inline-flex items-center rounded-md bg-indigo-50 px-2 py-0.5 font-mono text-xs font-bold text-indigo-700 dark:bg-indigo-950/50 dark:text-indigo-300"
+                                            class="inline-flex items-center rounded-md bg-blue-50 px-2 py-0.5 font-mono text-xs font-bold text-blue-700 dark:bg-blue-950/50 dark:text-blue-300"
                                         >
                                             {{ b.code }}
                                         </span>
-                                        <span class="font-medium text-gray-900 dark:text-white">
+                                        <span
+                                            class="font-medium text-gray-900 dark:text-white"
+                                        >
                                             {{ b.name }}
                                         </span>
                                     </div>
                                 </td>
                                 <td class="px-6 py-4">
                                     <div class="text-xs">
-                                        <p class="font-semibold text-gray-800 dark:text-gray-200">
+                                        <p
+                                            class="font-semibold text-gray-800 dark:text-gray-200"
+                                        >
                                             {{ b.pic?.name || '-' }}
                                         </p>
-                                        <p class="text-gray-500 dark:text-gray-400">
+                                        <p
+                                            class="text-gray-500 dark:text-gray-400"
+                                        >
                                             {{ b.pic?.email }}
                                         </p>
                                     </div>
@@ -1123,14 +1188,18 @@ const executeEmptyTrash = () => {
                             <tr
                                 v-for="bc in items.data"
                                 :key="bc.id"
-                                class="transition-colors hover:bg-gray-50/70 dark:hover:bg-gray-750"
+                                class="dark:hover:bg-gray-750 transition-colors hover:bg-gray-50/70"
                             >
                                 <td class="px-6 py-4">
-                                    <span class="font-bold text-gray-900 dark:text-white">
+                                    <span
+                                        class="font-bold text-gray-900 dark:text-white"
+                                    >
                                         {{ bc.name }}
                                     </span>
                                 </td>
-                                <td class="px-6 py-4 text-xs text-gray-500 dark:text-gray-400">
+                                <td
+                                    class="px-6 py-4 text-xs text-gray-500 dark:text-gray-400"
+                                >
                                     {{ bc.description || '-' }}
                                 </td>
                                 <td
@@ -1208,50 +1277,81 @@ const executeEmptyTrash = () => {
                             class="border-b border-gray-200 bg-gray-50 text-xs font-semibold uppercase text-gray-500 dark:border-gray-700/60 dark:bg-gray-900/40 dark:text-gray-400"
                         >
                             <tr>
-                                <th class="px-6 py-3.5 text-start">Kode Akun</th>
-                                <th class="px-6 py-3.5 text-start">Nama Akun</th>
-                                <th class="px-6 py-3.5 text-start">Kategori / Posisi</th>
-                                <th class="px-6 py-3.5 text-start">Dihapus Pada</th>
+                                <th class="px-6 py-3.5 text-start">
+                                    Kode Akun
+                                </th>
+                                <th class="px-6 py-3.5 text-start">
+                                    Nama Akun
+                                </th>
+                                <th class="px-6 py-3.5 text-start">
+                                    Kategori / Posisi
+                                </th>
+                                <th class="px-6 py-3.5 text-start">
+                                    Dihapus Pada
+                                </th>
                                 <th class="px-6 py-3.5 text-end">Aksi</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-gray-200 dark:divide-gray-700/60">
+                        <tbody
+                            class="divide-y divide-gray-200 dark:divide-gray-700/60"
+                        >
                             <tr
                                 v-for="coa in items.data"
                                 :key="coa.id"
                                 class="transition-colors hover:bg-gray-50/70 dark:hover:bg-gray-700/50"
                             >
                                 <td class="px-6 py-4">
-                                    <span class="font-mono font-bold text-indigo-600 dark:text-indigo-400">
+                                    <span
+                                        class="font-mono font-bold text-blue-600 dark:text-blue-400"
+                                    >
                                         {{ coa.account_code }}
                                     </span>
                                 </td>
                                 <td class="px-6 py-4">
-                                    <span class="font-bold text-gray-900 dark:text-white">
+                                    <span
+                                        class="font-bold text-gray-900 dark:text-white"
+                                    >
                                         {{ coa.account_name }}
                                     </span>
                                 </td>
                                 <td class="px-6 py-4">
-                                    <span class="uppercase text-xs font-semibold px-2 py-0.5 rounded bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300 mr-1.5">
-                                        {{ coa.kategori === 'bs' ? 'Neraca (BS)' : 'Laba Rugi (PL)' }}
+                                    <span
+                                        class="mr-1.5 rounded bg-gray-100 px-2 py-0.5 text-xs font-semibold uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-300"
+                                    >
+                                        {{
+                                            coa.kategori === 'bs'
+                                                ? 'Neraca (BS)'
+                                                : 'Laba Rugi (PL)'
+                                        }}
                                     </span>
                                     <span
-                                        class="uppercase text-xs font-semibold px-2 py-0.5 rounded"
-                                        :class="coa.jenis === 'debit' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300' : 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300'"
+                                        class="rounded px-2 py-0.5 text-xs font-semibold uppercase"
+                                        :class="
+                                            coa.jenis === 'debit'
+                                                ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300'
+                                                : 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300'
+                                        "
                                     >
                                         {{ coa.jenis }}
                                     </span>
                                 </td>
-                                <td class="px-6 py-4 text-xs font-medium text-red-600 dark:text-red-400">
+                                <td
+                                    class="px-6 py-4 text-xs font-medium text-red-600 dark:text-red-400"
+                                >
                                     {{
-                                        new Date(coa.deleted_at).toLocaleString('id-ID', {
-                                            dateStyle: 'medium',
-                                            timeStyle: 'short',
-                                        })
+                                        new Date(coa.deleted_at).toLocaleString(
+                                            'id-ID',
+                                            {
+                                                dateStyle: 'medium',
+                                                timeStyle: 'short',
+                                            },
+                                        )
                                     }}
                                 </td>
                                 <td class="px-6 py-4 text-end">
-                                    <div class="flex items-center justify-end gap-2">
+                                    <div
+                                        class="flex items-center justify-end gap-2"
+                                    >
                                         <button
                                             type="button"
                                             @click="restoreItem(coa)"
@@ -1310,50 +1410,73 @@ const executeEmptyTrash = () => {
                             class="border-b border-gray-200 bg-gray-50 text-xs font-semibold uppercase text-gray-500 dark:border-gray-700/60 dark:bg-gray-900/40 dark:text-gray-400"
                         >
                             <tr>
-                                <th class="px-6 py-3.5 text-start">Kode Satuan</th>
-                                <th class="px-6 py-3.5 text-start">Nama Satuan</th>
+                                <th class="px-6 py-3.5 text-start">
+                                    Kode Satuan
+                                </th>
+                                <th class="px-6 py-3.5 text-start">
+                                    Nama Satuan
+                                </th>
                                 <th class="px-6 py-3.5 text-start">Simbol</th>
                                 <th class="px-6 py-3.5 text-start">Kategori</th>
-                                <th class="px-6 py-3.5 text-start">Dihapus Pada</th>
+                                <th class="px-6 py-3.5 text-start">
+                                    Dihapus Pada
+                                </th>
                                 <th class="px-6 py-3.5 text-end">Aksi</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-gray-200 dark:divide-gray-700/60">
+                        <tbody
+                            class="divide-y divide-gray-200 dark:divide-gray-700/60"
+                        >
                             <tr
                                 v-for="uom in items.data"
                                 :key="uom.id"
                                 class="transition-colors hover:bg-gray-50/70 dark:hover:bg-gray-700/50"
                             >
                                 <td class="px-6 py-4">
-                                    <span class="font-mono font-bold text-indigo-600 dark:text-indigo-400">
+                                    <span
+                                        class="font-mono font-bold text-blue-600 dark:text-blue-400"
+                                    >
                                         {{ uom.code }}
                                     </span>
                                 </td>
                                 <td class="px-6 py-4">
-                                    <span class="font-bold text-gray-900 dark:text-white">
+                                    <span
+                                        class="font-bold text-gray-900 dark:text-white"
+                                    >
                                         {{ uom.name }}
                                     </span>
                                 </td>
                                 <td class="px-6 py-4">
-                                    <span class="rounded bg-gray-100 px-2 py-0.5 text-xs font-mono text-gray-700 dark:bg-gray-700 dark:text-gray-300">
+                                    <span
+                                        class="rounded bg-gray-100 px-2 py-0.5 font-mono text-xs text-gray-700 dark:bg-gray-700 dark:text-gray-300"
+                                    >
                                         {{ uom.symbol || '-' }}
                                     </span>
                                 </td>
                                 <td class="px-6 py-4">
-                                    <span class="rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-900/40 dark:text-blue-300">
+                                    <span
+                                        class="rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-900/40 dark:text-blue-300"
+                                    >
                                         {{ uom.category }}
                                     </span>
                                 </td>
-                                <td class="px-6 py-4 text-xs font-medium text-red-600 dark:text-red-400">
+                                <td
+                                    class="px-6 py-4 text-xs font-medium text-red-600 dark:text-red-400"
+                                >
                                     {{
-                                        new Date(uom.deleted_at).toLocaleString('id-ID', {
-                                            dateStyle: 'medium',
-                                            timeStyle: 'short',
-                                        })
+                                        new Date(uom.deleted_at).toLocaleString(
+                                            'id-ID',
+                                            {
+                                                dateStyle: 'medium',
+                                                timeStyle: 'short',
+                                            },
+                                        )
                                     }}
                                 </td>
                                 <td class="px-6 py-4 text-end">
-                                    <div class="flex items-center justify-end gap-2">
+                                    <div
+                                        class="flex items-center justify-end gap-2"
+                                    >
                                         <button
                                             type="button"
                                             @click="restoreItem(uom)"
@@ -1379,6 +1502,303 @@ const executeEmptyTrash = () => {
                                         <button
                                             type="button"
                                             @click="confirmForceDelete(uom)"
+                                            class="inline-flex items-center gap-1 rounded-lg border border-red-200 bg-red-50 px-2.5 py-1 text-xs font-semibold text-red-700 transition-colors hover:bg-red-100 dark:border-red-800/60 dark:bg-red-950/40 dark:text-red-300 dark:hover:bg-red-900/50"
+                                        >
+                                            <svg
+                                                class="h-3.5 w-3.5"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
+                                            >
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    stroke-width="2"
+                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                                                />
+                                            </svg>
+                                            Hapus Permanen
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- Table 10: Term of Payments (TOP) -->
+                    <table
+                        v-if="
+                            activeTab === 'term_of_payments' &&
+                            items.data.length > 0
+                        "
+                        class="w-full text-start text-sm text-gray-600 dark:text-gray-300"
+                    >
+                        <thead
+                            class="border-b border-gray-200 bg-gray-50/75 text-xs uppercase tracking-wider text-gray-500 dark:border-gray-700/60 dark:bg-gray-700/40 dark:text-gray-400"
+                        >
+                            <tr>
+                                <th
+                                    scope="col"
+                                    class="px-6 py-3.5 font-semibold"
+                                >
+                                    Kode Termin
+                                </th>
+                                <th
+                                    scope="col"
+                                    class="px-6 py-3.5 font-semibold"
+                                >
+                                    Nama Termin
+                                </th>
+                                <th
+                                    scope="col"
+                                    class="px-6 py-3.5 font-semibold"
+                                >
+                                    Jatuh Tempo
+                                </th>
+                                <th
+                                    scope="col"
+                                    class="px-6 py-3.5 font-semibold"
+                                >
+                                    Dihapus Pada
+                                </th>
+                                <th
+                                    scope="col"
+                                    class="px-6 py-3.5 text-end font-semibold"
+                                >
+                                    Aksi
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody
+                            class="divide-y divide-gray-200 dark:divide-gray-700/60"
+                        >
+                            <tr
+                                v-for="top in items.data"
+                                :key="top.id"
+                                class="transition-colors hover:bg-gray-50/50 dark:hover:bg-gray-700/30"
+                            >
+                                <td
+                                    class="px-6 py-4 font-mono font-bold text-gray-900 dark:text-white"
+                                >
+                                    {{ top.payment }}
+                                </td>
+                                <td
+                                    class="px-6 py-4 font-medium text-gray-900 dark:text-white"
+                                >
+                                    {{ top.name }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span
+                                        class="inline-flex items-center rounded-full bg-blue-50 px-2.5 py-0.5 text-xs font-semibold text-blue-700 dark:bg-blue-950/50 dark:text-blue-300"
+                                    >
+                                        {{ top.days }} Hari
+                                    </span>
+                                </td>
+                                <td
+                                    class="px-6 py-4 text-xs text-gray-500 dark:text-gray-400"
+                                >
+                                    {{
+                                        new Date(top.deleted_at).toLocaleString(
+                                            'id-ID',
+                                            {
+                                                dateStyle: 'medium',
+                                                timeStyle: 'short',
+                                            },
+                                        )
+                                    }}
+                                </td>
+                                <td class="px-6 py-4 text-end">
+                                    <div
+                                        class="flex items-center justify-end gap-2"
+                                    >
+                                        <button
+                                            type="button"
+                                            @click="restoreItem(top)"
+                                            class="inline-flex items-center gap-1 rounded-lg border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 transition-colors hover:bg-emerald-100 dark:border-emerald-800/60 dark:bg-emerald-950/40 dark:text-emerald-300 dark:hover:bg-emerald-900/50"
+                                            title="Pulihkan Termin"
+                                        >
+                                            <svg
+                                                class="h-3.5 w-3.5"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
+                                            >
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    stroke-width="2"
+                                                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                                                />
+                                            </svg>
+                                            Pulihkan
+                                        </button>
+                                        <button
+                                            type="button"
+                                            @click="confirmForceDelete(top)"
+                                            class="inline-flex items-center gap-1 rounded-lg border border-red-200 bg-red-50 px-2.5 py-1 text-xs font-semibold text-red-700 transition-colors hover:bg-red-100 dark:border-red-800/60 dark:bg-red-950/40 dark:text-red-300 dark:hover:bg-red-900/50"
+                                        >
+                                            <svg
+                                                class="h-3.5 w-3.5"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
+                                            >
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    stroke-width="2"
+                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                                                />
+                                            </svg>
+                                            Hapus Permanen
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- Table 11: Suppliers -->
+                    <table
+                        v-if="
+                            activeTab === 'suppliers' && items.data.length > 0
+                        "
+                        class="w-full text-start text-sm text-gray-600 dark:text-gray-300"
+                    >
+                        <thead
+                            class="border-b border-gray-200 bg-gray-50/75 text-xs uppercase tracking-wider text-gray-500 dark:border-gray-700/60 dark:bg-gray-700/40 dark:text-gray-400"
+                        >
+                            <tr>
+                                <th
+                                    scope="col"
+                                    class="px-6 py-3.5 font-semibold"
+                                >
+                                    Kode Supplier
+                                </th>
+                                <th
+                                    scope="col"
+                                    class="px-6 py-3.5 font-semibold"
+                                >
+                                    Nama Supplier
+                                </th>
+                                <th
+                                    scope="col"
+                                    class="px-6 py-3.5 font-semibold"
+                                >
+                                    Tipe
+                                </th>
+                                <th
+                                    scope="col"
+                                    class="px-6 py-3.5 font-semibold"
+                                >
+                                    Term of Payment
+                                </th>
+                                <th
+                                    scope="col"
+                                    class="px-6 py-3.5 font-semibold"
+                                >
+                                    Dihapus Pada
+                                </th>
+                                <th
+                                    scope="col"
+                                    class="px-6 py-3.5 text-end font-semibold"
+                                >
+                                    Aksi
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody
+                            class="divide-y divide-gray-200 dark:divide-gray-700/60"
+                        >
+                            <tr
+                                v-for="supplier in items.data"
+                                :key="supplier.id"
+                                class="transition-colors hover:bg-gray-50/50 dark:hover:bg-gray-700/30"
+                            >
+                                <td
+                                    class="px-6 py-4 font-mono font-bold text-gray-900 dark:text-white"
+                                >
+                                    {{ supplier.supplier_code }}
+                                </td>
+                                <td
+                                    class="px-6 py-4 font-semibold text-gray-900 dark:text-white"
+                                >
+                                    {{ supplier.supplier_name }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span
+                                        class="inline-flex items-center rounded-md px-2 py-0.5 text-xs font-semibold"
+                                        :class="
+                                            supplier.supplier_type === 'direct'
+                                                ? 'bg-blue-100 text-blue-800 dark:bg-blue-950/60 dark:text-blue-300'
+                                                : 'bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300'
+                                        "
+                                    >
+                                        {{
+                                            supplier.supplier_type === 'direct'
+                                                ? 'Direct'
+                                                : 'Indirect'
+                                        }}
+                                    </span>
+                                </td>
+                                <td
+                                    class="px-6 py-4 text-xs text-gray-600 dark:text-gray-400"
+                                >
+                                    {{
+                                        supplier.term_of_payment
+                                            ? supplier.term_of_payment.payment +
+                                              ' (' +
+                                              supplier.term_of_payment.name +
+                                              ')'
+                                            : '-'
+                                    }}
+                                </td>
+                                <td
+                                    class="px-6 py-4 text-xs text-gray-500 dark:text-gray-400"
+                                >
+                                    {{
+                                        new Date(
+                                            supplier.deleted_at,
+                                        ).toLocaleString('id-ID', {
+                                            dateStyle: 'medium',
+                                            timeStyle: 'short',
+                                        })
+                                    }}
+                                </td>
+                                <td class="px-6 py-4 text-end">
+                                    <div
+                                        class="flex items-center justify-end gap-2"
+                                    >
+                                        <button
+                                            type="button"
+                                            @click="restoreItem(supplier)"
+                                            class="inline-flex items-center gap-1 rounded-lg border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 transition-colors hover:bg-emerald-100 dark:border-emerald-800/60 dark:bg-emerald-950/40 dark:text-emerald-300 dark:hover:bg-emerald-900/50"
+                                            title="Pulihkan Supplier"
+                                        >
+                                            <svg
+                                                class="h-3.5 w-3.5"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
+                                            >
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    stroke-width="2"
+                                                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                                                />
+                                            </svg>
+                                            Pulihkan
+                                        </button>
+                                        <button
+                                            type="button"
+                                            @click="
+                                                confirmForceDelete(supplier)
+                                            "
                                             class="inline-flex items-center gap-1 rounded-lg border border-red-200 bg-red-50 px-2.5 py-1 text-xs font-semibold text-red-700 transition-colors hover:bg-red-100 dark:border-red-800/60 dark:bg-red-950/40 dark:text-red-300 dark:hover:bg-red-900/50"
                                         >
                                             <svg
@@ -1492,12 +1912,15 @@ const executeEmptyTrash = () => {
                     <strong>tidak dapat dikembalikan lagi</strong>.
                 </p>
                 <div class="mt-6 flex justify-end gap-3">
-                    <SecondaryButton @click="showForceDeleteModal = false">
+                    <Button
+                        variant="secondary"
+                        @click="showForceDeleteModal = false"
+                    >
                         Batal
-                    </SecondaryButton>
-                    <DangerButton @click="executeForceDelete">
+                    </Button>
+                    <Button variant="danger" @click="executeForceDelete">
                         Ya, Hapus Permanen
-                    </DangerButton>
+                    </Button>
                 </div>
             </div>
         </Modal>
@@ -1517,12 +1940,15 @@ const executeEmptyTrash = () => {
                     ada di tempat sampah akan dikembalikan ke daftar aktif.
                 </p>
                 <div class="mt-6 flex justify-end gap-3">
-                    <SecondaryButton @click="showRestoreAllModal = false">
+                    <Button
+                        variant="secondary"
+                        @click="showRestoreAllModal = false"
+                    >
                         Batal
-                    </SecondaryButton>
-                    <PrimaryButton @click="executeRestoreAll">
+                    </Button>
+                    <Button variant="primary" @click="executeRestoreAll">
                         Ya, Pulihkan Semua
-                    </PrimaryButton>
+                    </Button>
                 </div>
             </div>
         </Modal>
@@ -1566,14 +1992,17 @@ const executeEmptyTrash = () => {
                     Tindakan ini tidak dapat dibatalkan.
                 </p>
                 <div class="mt-6 flex justify-end gap-3">
-                    <SecondaryButton @click="showEmptyTrashModal = false">
+                    <Button
+                        variant="secondary"
+                        @click="showEmptyTrashModal = false"
+                    >
                         Batal
-                    </SecondaryButton>
-                    <DangerButton @click="executeEmptyTrash">
+                    </Button>
+                    <Button variant="danger" @click="executeEmptyTrash">
                         Ya, Kosongkan
-                    </DangerButton>
+                    </Button>
                 </div>
             </div>
         </Modal>
-    </AuthenticatedLayout>
+    </AuthenticatedTemplate>
 </template>

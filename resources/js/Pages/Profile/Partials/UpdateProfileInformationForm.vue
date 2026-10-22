@@ -1,10 +1,9 @@
 <script setup>
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import Modal from '@/Components/Modal.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import SecondaryButton from '@/Components/SecondaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
+import Button from '@/Components/Atoms/Button.vue';
+import InputError from '@/Components/Atoms/InputError.vue';
+import InputLabel from '@/Components/Atoms/InputLabel.vue';
+import Modal from '@/Components/Atoms/Modal.vue';
+import TextInput from '@/Components/Atoms/TextInput.vue';
 import { Link, router, useForm, usePage } from '@inertiajs/vue3';
 import { computed, nextTick, onUnmounted, ref, watch } from 'vue';
 
@@ -309,7 +308,7 @@ const cancelOtp = () => {
                             />
                             <span
                                 v-else
-                                class="text-2xl font-bold uppercase text-indigo-600 dark:text-indigo-400"
+                                class="text-2xl font-bold uppercase text-blue-600 dark:text-blue-400"
                             >
                                 {{ user.name.charAt(0) }}
                             </span>
@@ -328,7 +327,8 @@ const cancelOtp = () => {
                             @change="onAvatarSelected"
                         />
 
-                        <SecondaryButton
+                        <Button
+                            variant="secondary"
                             type="button"
                             @click="avatarInput.click()"
                             class="text-xs"
@@ -339,16 +339,16 @@ const cancelOtp = () => {
                                 fill="none"
                                 viewBox="0 0 24 24"
                                 stroke="currentColor"
-                                stroke-width="2"
                             >
                                 <path
                                     stroke-linecap="round"
                                     stroke-linejoin="round"
-                                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                    stroke-width="2"
+                                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
                                 />
                             </svg>
-                            Pilih Foto Baru
-                        </SecondaryButton>
+                            Unggah Foto
+                        </Button>
 
                         <button
                             v-if="avatarPreview"
@@ -411,7 +411,7 @@ const cancelOtp = () => {
                         :href="route('verification.send')"
                         method="post"
                         as="button"
-                        class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:text-gray-400 dark:hover:text-gray-100 dark:focus:ring-offset-gray-800"
+                        class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:text-gray-400 dark:hover:text-gray-100 dark:focus:ring-offset-gray-800"
                     >
                         Klik di sini untuk mengirim ulang email verifikasi.
                     </Link>
@@ -427,9 +427,9 @@ const cancelOtp = () => {
             </div>
 
             <div class="flex items-center gap-4">
-                <PrimaryButton :disabled="form.processing">
+                <Button variant="primary" :disabled="form.processing">
                     Simpan Perubahan
-                </PrimaryButton>
+                </Button>
 
                 <Transition
                     enter-active-class="transition ease-in-out"
@@ -455,7 +455,7 @@ const cancelOtp = () => {
                 >
                     <div class="flex items-center gap-2.5">
                         <div
-                            class="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 dark:bg-indigo-950/60 dark:text-indigo-400"
+                            class="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-50 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400"
                         >
                             <svg
                                 class="h-5 w-5"
@@ -509,7 +509,7 @@ const cancelOtp = () => {
                         Kami telah mengirimkan kode verifikasi 6 digit ke:
                     </p>
                     <p
-                        class="mt-1 break-all text-sm font-semibold text-indigo-600 dark:text-indigo-400"
+                        class="mt-1 break-all text-sm font-semibold text-blue-600 dark:text-blue-400"
                     >
                         {{ pendingEmail }}
                     </p>
@@ -536,7 +536,7 @@ const cancelOtp = () => {
                             v-model="otpDigits[index]"
                             @input="onDigitInput(index, $event)"
                             @keydown="onDigitKeydown(index, $event)"
-                            class="shadow-xs h-12 w-11 rounded-lg border border-gray-300 text-center text-xl font-bold text-gray-900 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-indigo-400"
+                            class="shadow-xs h-12 w-11 rounded-lg border border-gray-300 text-center text-xl font-bold text-gray-900 focus:border-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-blue-400"
                         />
                     </div>
 
@@ -556,7 +556,7 @@ const cancelOtp = () => {
                         >
                             Kirim ulang kode dalam
                             <span
-                                class="font-semibold text-indigo-600 dark:text-indigo-400"
+                                class="font-semibold text-blue-600 dark:text-blue-400"
                                 >{{ cooldown }} detik</span
                             >
                         </p>
@@ -565,7 +565,7 @@ const cancelOtp = () => {
                             type="button"
                             @click="resendOtp"
                             :disabled="isResending"
-                            class="text-xs font-semibold text-indigo-600 hover:text-indigo-700 hover:underline dark:text-indigo-400 dark:hover:text-indigo-300"
+                            class="text-xs font-semibold text-blue-600 hover:text-blue-700 hover:underline dark:text-blue-400 dark:hover:text-blue-300"
                         >
                             {{
                                 isResending
@@ -579,7 +579,8 @@ const cancelOtp = () => {
                     <div
                         class="mt-6 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end"
                     >
-                        <SecondaryButton
+                        <Button
+                            variant="secondary"
                             type="button"
                             @click="cancelOtp"
                             :disabled="isCancelling"
@@ -590,9 +591,10 @@ const cancelOtp = () => {
                                     ? 'Membatalkan...'
                                     : 'Batalkan Perubahan'
                             }}
-                        </SecondaryButton>
+                        </Button>
 
-                        <PrimaryButton
+                        <Button
+                            variant="primary"
                             type="submit"
                             :disabled="
                                 formOtp.processing ||
@@ -629,7 +631,7 @@ const cancelOtp = () => {
                                 >Memverifikasi...</span
                             >
                             <span v-else>Verifikasi & Simpan Email</span>
-                        </PrimaryButton>
+                        </Button>
                     </div>
                 </form>
             </div>

@@ -1,10 +1,10 @@
 <script setup>
-import GuestLayout from '@/Layouts/GuestLayout.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import PasswordInput from '@/Components/PasswordInput.vue';
-import TextInput from '@/Components/TextInput.vue';
+import Button from '@/Components/Atoms/Button.vue';
+import InputError from '@/Components/Atoms/InputError.vue';
+import InputLabel from '@/Components/Atoms/InputLabel.vue';
+import PasswordInput from '@/Components/Atoms/PasswordInput.vue';
+import TextInput from '@/Components/Atoms/TextInput.vue';
+import GuestTemplate from '@/Components/Templates/GuestTemplate.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 
 const form = useForm({
@@ -22,7 +22,7 @@ const submit = () => {
 </script>
 
 <template>
-    <GuestLayout>
+    <GuestTemplate>
         <Head title="Register" />
 
         <form @submit.prevent="submit">
@@ -94,19 +94,20 @@ const submit = () => {
             <div class="mt-4 flex items-center justify-end">
                 <Link
                     :href="route('login')"
-                    class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:text-gray-400 dark:hover:text-gray-100 dark:focus:ring-offset-gray-800"
+                    class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:text-gray-400 dark:hover:text-gray-100 dark:focus:ring-offset-gray-800"
                 >
                     Already registered?
                 </Link>
 
-                <PrimaryButton
+                <Button
+                    variant="primary"
                     class="ms-4"
                     :class="{ 'opacity-25': form.processing }"
                     :disabled="form.processing"
                 >
                     Register
-                </PrimaryButton>
+                </Button>
             </div>
         </form>
-    </GuestLayout>
+    </GuestTemplate>
 </template>

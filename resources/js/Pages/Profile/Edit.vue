@@ -1,5 +1,6 @@
 <script setup>
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import PageHeader from '@/Components/Organisms/PageHeader.vue';
+import AuthenticatedTemplate from '@/Components/Templates/AuthenticatedTemplate.vue';
 import DeleteUserForm from './Partials/DeleteUserForm.vue';
 import TwoFactorAuthenticationForm from './Partials/TwoFactorAuthenticationForm.vue';
 import UpdatePasswordForm from './Partials/UpdatePasswordForm.vue';
@@ -41,56 +42,55 @@ defineProps({
 </script>
 
 <template>
-    <Head title="Profile" />
+    <Head title="Pengaturan Profil" />
 
-    <AuthenticatedLayout>
+    <AuthenticatedTemplate>
         <template #header>
-            <h2
-                class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200"
-            >
-                Profile
-            </h2>
+            <PageHeader
+                title="Pengaturan Profil"
+                subtitle="Kelola informasi akun pengguna, kata sandi, dan keamanan otentikasi dua faktor."
+                :breadcrumbs="[
+                    { label: 'Dashboard', href: route('dashboard') },
+                    { label: 'Profil Pengguna' },
+                ]"
+            />
         </template>
 
-        <div class="py-12">
-            <div class="mx-auto max-w-7xl space-y-6 sm:px-6 lg:px-8">
-                <div
-                    class="bg-white p-4 shadow dark:bg-gray-800 sm:rounded-lg sm:p-8"
-                >
-                    <UpdateProfileInformationForm
-                        :must-verify-email="mustVerifyEmail"
-                        :status="status"
-                        :pending-email="pendingEmail"
-                        :otp-cooldown="otpCooldown"
-                        class="max-w-xl"
-                    />
-                </div>
+        <div class="mx-auto max-w-5xl space-y-6">
+            <div
+                class="shadow-xs rounded-xl border border-gray-200 bg-white p-6 dark:border-gray-700/60 dark:bg-gray-800"
+            >
+                <UpdateProfileInformationForm
+                    :must-verify-email="mustVerifyEmail"
+                    :status="status"
+                    :pending-email="pendingEmail"
+                    :otp-cooldown="otpCooldown"
+                />
+            </div>
 
-                <!-- Two-Factor Authentication Setting -->
-                <div
-                    class="bg-white p-4 shadow dark:bg-gray-800 sm:rounded-lg sm:p-8"
-                >
-                    <TwoFactorAuthenticationForm
-                        :two-factor-enabled="twoFactorEnabled"
-                        :two-factor-confirmed-at="twoFactorConfirmedAt"
-                        :pending-two-factor="pendingTwoFactor"
-                        :two-factor-cooldown="twoFactorCooldown"
-                        class="max-w-xl"
-                    />
-                </div>
+            <!-- Two-Factor Authentication Setting -->
+            <div
+                class="shadow-xs rounded-xl border border-gray-200 bg-white p-6 dark:border-gray-700/60 dark:bg-gray-800"
+            >
+                <TwoFactorAuthenticationForm
+                    :two-factor-enabled="twoFactorEnabled"
+                    :two-factor-confirmed-at="twoFactorConfirmedAt"
+                    :pending-two-factor="pendingTwoFactor"
+                    :two-factor-cooldown="twoFactorCooldown"
+                />
+            </div>
 
-                <div
-                    class="bg-white p-4 shadow dark:bg-gray-800 sm:rounded-lg sm:p-8"
-                >
-                    <UpdatePasswordForm class="max-w-xl" />
-                </div>
+            <div
+                class="shadow-xs rounded-xl border border-gray-200 bg-white p-6 dark:border-gray-700/60 dark:bg-gray-800"
+            >
+                <UpdatePasswordForm />
+            </div>
 
-                <div
-                    class="bg-white p-4 shadow dark:bg-gray-800 sm:rounded-lg sm:p-8"
-                >
-                    <DeleteUserForm class="max-w-xl" />
-                </div>
+            <div
+                class="shadow-xs rounded-xl border border-gray-200 bg-white p-6 dark:border-gray-700/60 dark:bg-gray-800"
+            >
+                <DeleteUserForm />
             </div>
         </div>
-    </AuthenticatedLayout>
+    </AuthenticatedTemplate>
 </template>

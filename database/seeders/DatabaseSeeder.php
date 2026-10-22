@@ -46,5 +46,11 @@ class DatabaseSeeder extends Seeder
 
         // 6. Seed Units of Measure (UOM)
         $this->call(UnitOfMeasureSeeder::class);
+
+        // 7. Seed Term of Payments (TOP)
+        $this->call(TermOfPaymentSeeder::class);
+
+        // 8. Seed Master Suppliers
+        $this->call(SupplierSeeder::class);
     }
 }

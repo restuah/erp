@@ -1,10 +1,9 @@
 <script setup>
-import GuestLayout from '@/Layouts/GuestLayout.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
-import ThemeToggle from '@/Components/ThemeToggle.vue';
+import Button from '@/Components/Atoms/Button.vue';
+import InputError from '@/Components/Atoms/InputError.vue';
+import InputLabel from '@/Components/Atoms/InputLabel.vue';
+import TextInput from '@/Components/Atoms/TextInput.vue';
+import GuestTemplate from '@/Components/Templates/GuestTemplate.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 
 defineProps({
@@ -23,24 +22,19 @@ const submit = () => {
 </script>
 
 <template>
-    <GuestLayout>
+    <GuestTemplate>
         <Head title="Lupa Kata Sandi" />
 
-        <!-- Header above form with Theme Toggle -->
-        <div
-            class="mb-6 flex items-center justify-between border-b border-gray-100 pb-4 dark:border-gray-700/80"
-        >
-            <div>
-                <h1
-                    class="text-lg font-bold tracking-tight text-gray-900 dark:text-white"
-                >
-                    Lupa Kata Sandi
-                </h1>
-                <p class="text-xs text-gray-500 dark:text-gray-400">
-                    Sistem Manajemen Terpadu ERP
-                </p>
-            </div>
-            <ThemeToggle />
+        <!-- Header above form -->
+        <div class="mb-6 border-b border-gray-100 pb-4 dark:border-gray-700/80">
+            <h1
+                class="text-lg font-bold tracking-tight text-gray-900 dark:text-white"
+            >
+                Lupa Kata Sandi
+            </h1>
+            <p class="text-xs text-gray-500 dark:text-gray-400">
+                Sistem Manajemen Terpadu ERP
+            </p>
         </div>
 
         <div
@@ -48,7 +42,7 @@ const submit = () => {
         >
             Masukkan alamat email akun ERP Anda yang sudah terdaftar. Kami akan
             mengirimkan tautan reset kata sandi dengan masa berlaku
-            <span class="font-semibold text-indigo-600 dark:text-indigo-400"
+            <span class="font-semibold text-blue-600 dark:text-blue-400"
                 >30 menit</span
             >.
         </div>
@@ -121,11 +115,10 @@ const submit = () => {
             </div>
 
             <div class="pt-2">
-                <PrimaryButton
-                    class="w-full justify-center py-2.5 shadow-sm"
-                    :class="{
-                        'cursor-not-allowed opacity-50': form.processing,
-                    }"
+                <Button
+                    variant="primary"
+                    class="w-full justify-center py-2.5 text-xs font-semibold"
+                    :class="{ 'opacity-50': form.processing }"
                     :disabled="form.processing"
                 >
                     <svg
@@ -150,7 +143,7 @@ const submit = () => {
                     </svg>
                     <span v-if="form.processing">Mengirim Tautan...</span>
                     <span v-else>Kirim Tautan Reset Kata Sandi</span>
-                </PrimaryButton>
+                </Button>
             </div>
 
             <div
@@ -158,7 +151,7 @@ const submit = () => {
             >
                 <Link
                     :href="route('login')"
-                    class="inline-flex items-center gap-1.5 text-xs font-medium text-gray-600 transition-colors hover:text-indigo-600 dark:text-gray-400 dark:hover:text-indigo-400"
+                    class="inline-flex items-center gap-1.5 text-xs font-medium text-gray-600 transition-colors hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400"
                 >
                     <svg
                         class="h-4 w-4"
@@ -177,5 +170,5 @@ const submit = () => {
                 </Link>
             </div>
         </form>
-    </GuestLayout>
+    </GuestTemplate>
 </template>

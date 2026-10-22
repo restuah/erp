@@ -1,12 +1,11 @@
 <script setup>
-import Checkbox from '@/Components/Checkbox.vue';
-import GuestLayout from '@/Layouts/GuestLayout.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import PasswordInput from '@/Components/PasswordInput.vue';
-import TextInput from '@/Components/TextInput.vue';
-import ThemeToggle from '@/Components/ThemeToggle.vue';
+import Button from '@/Components/Atoms/Button.vue';
+import Checkbox from '@/Components/Atoms/Checkbox.vue';
+import InputError from '@/Components/Atoms/InputError.vue';
+import InputLabel from '@/Components/Atoms/InputLabel.vue';
+import PasswordInput from '@/Components/Atoms/PasswordInput.vue';
+import TextInput from '@/Components/Atoms/TextInput.vue';
+import GuestTemplate from '@/Components/Templates/GuestTemplate.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 
 defineProps({
@@ -32,24 +31,19 @@ const submit = () => {
 </script>
 
 <template>
-    <GuestLayout>
+    <GuestTemplate>
         <Head title="Log in" />
 
-        <!-- Header above form with Theme Toggle -->
-        <div
-            class="mb-6 flex items-center justify-between border-b border-gray-100 pb-4 dark:border-gray-700/80"
-        >
-            <div>
-                <h1
-                    class="text-lg font-bold tracking-tight text-gray-900 dark:text-white"
-                >
-                    Masuk ke Akun
-                </h1>
-                <p class="text-xs text-gray-500 dark:text-gray-400">
-                    Sistem Manajemen Terpadu ERP
-                </p>
-            </div>
-            <ThemeToggle />
+        <!-- Header above form -->
+        <div class="mb-6 border-b border-gray-100 pb-4 dark:border-gray-700/80">
+            <h1
+                class="text-lg font-bold tracking-tight text-gray-900 dark:text-white"
+            >
+                Masuk ke Akun
+            </h1>
+            <p class="text-xs text-gray-500 dark:text-gray-400">
+                Sistem Manajemen Terpadu ERP
+            </p>
         </div>
 
         <div v-if="status" class="mb-4 text-sm font-medium text-green-600">
@@ -100,19 +94,22 @@ const submit = () => {
                 <Link
                     v-if="canResetPassword"
                     :href="route('password.request')"
-                    class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:text-gray-400 dark:hover:text-gray-100 dark:focus:ring-offset-gray-800"
+                    class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:text-gray-400 dark:hover:text-gray-100 dark:focus:ring-offset-gray-800"
                 >
                     Lupa kata sandi?
                 </Link>
 
-                <PrimaryButton
+                <Button
+                    type="submit"
+                    variant="primary"
                     class="ms-4"
                     :class="{ 'opacity-25': form.processing }"
                     :disabled="form.processing"
+                    :loading="form.processing"
                 >
                     Log in
-                </PrimaryButton>
+                </Button>
             </div>
         </form>
-    </GuestLayout>
+    </GuestTemplate>
 </template>

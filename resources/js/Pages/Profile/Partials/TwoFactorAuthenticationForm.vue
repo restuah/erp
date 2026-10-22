@@ -1,11 +1,9 @@
 <script setup>
-import DangerButton from '@/Components/DangerButton.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import Modal from '@/Components/Modal.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import SecondaryButton from '@/Components/SecondaryButton.vue';
-import PasswordInput from '@/Components/PasswordInput.vue';
+import Button from '@/Components/Atoms/Button.vue';
+import InputError from '@/Components/Atoms/InputError.vue';
+import InputLabel from '@/Components/Atoms/InputLabel.vue';
+import Modal from '@/Components/Atoms/Modal.vue';
+import PasswordInput from '@/Components/Atoms/PasswordInput.vue';
 import { router, useForm, usePage } from '@inertiajs/vue3';
 import { computed, nextTick, onUnmounted, ref, watch } from 'vue';
 
@@ -247,7 +245,7 @@ const closeDisableModal = () => {
                     :class="
                         twoFactorEnabled
                             ? 'bg-emerald-100 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400'
-                            : 'bg-indigo-100 text-indigo-600 dark:bg-indigo-950/60 dark:text-indigo-400'
+                            : 'bg-blue-100 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400'
                     "
                 >
                     <!-- Shield Icon -->
@@ -347,15 +345,17 @@ const closeDisableModal = () => {
                 </div>
 
                 <div class="shrink-0">
-                    <DangerButton
+                    <Button
+                        variant="danger"
                         v-if="twoFactorEnabled"
                         type="button"
                         @click="confirmDisable2Fa"
                     >
                         Nonaktifkan 2FA
-                    </DangerButton>
+                    </Button>
 
-                    <PrimaryButton
+                    <Button
+                        variant="primary"
                         v-else
                         type="button"
                         :disabled="enabling2Fa"
@@ -382,7 +382,7 @@ const closeDisableModal = () => {
                             ></path>
                         </svg>
                         {{ enabling2Fa ? 'Mengirim OTP...' : 'Aktifkan 2FA' }}
-                    </PrimaryButton>
+                    </Button>
                 </div>
             </div>
         </div>
@@ -396,7 +396,7 @@ const closeDisableModal = () => {
                 >
                     <div class="flex items-center gap-2.5">
                         <div
-                            class="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 dark:bg-indigo-950/60 dark:text-indigo-400"
+                            class="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-50 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400"
                         >
                             <svg
                                 class="h-5 w-5"
@@ -450,7 +450,7 @@ const closeDisableModal = () => {
                         Kami telah mengirimkan kode verifikasi 6 digit ke:
                     </p>
                     <p
-                        class="mt-1 break-all text-sm font-semibold text-indigo-600 dark:text-indigo-400"
+                        class="mt-1 break-all text-sm font-semibold text-blue-600 dark:text-blue-400"
                     >
                         {{ user?.email }}
                     </p>
@@ -472,7 +472,7 @@ const closeDisableModal = () => {
                             :value="digit"
                             @input="onDigitInput(idx, $event)"
                             @keydown="onDigitKeydown(idx, $event)"
-                            class="h-12 w-11 rounded-lg border border-gray-300 text-center text-xl font-bold tracking-tight text-gray-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:focus:border-indigo-400 sm:h-14 sm:w-12"
+                            class="h-12 w-11 rounded-lg border border-gray-300 text-center text-xl font-bold tracking-tight text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:focus:border-blue-400 sm:h-14 sm:w-12"
                         />
                     </div>
 
@@ -489,7 +489,7 @@ const closeDisableModal = () => {
                         >
                             Kirim ulang kode dalam
                             <span
-                                class="font-semibold text-indigo-600 dark:text-indigo-400"
+                                class="font-semibold text-blue-600 dark:text-blue-400"
                                 >{{ cooldown }}s</span
                             >
                         </p>
@@ -498,7 +498,7 @@ const closeDisableModal = () => {
                             type="button"
                             @click="resendOtp"
                             :disabled="isResending"
-                            class="text-xs font-semibold text-indigo-600 hover:text-indigo-700 hover:underline disabled:opacity-50 dark:text-indigo-400 dark:hover:text-indigo-300"
+                            class="text-xs font-semibold text-blue-600 hover:text-blue-700 hover:underline disabled:opacity-50 dark:text-blue-400 dark:hover:text-blue-300"
                         >
                             {{
                                 isResending
@@ -512,15 +512,17 @@ const closeDisableModal = () => {
                     <div
                         class="mt-6 flex items-center justify-end gap-3 border-t border-gray-100 pt-4 dark:border-gray-700/60"
                     >
-                        <SecondaryButton
+                        <Button
+                            variant="secondary"
                             type="button"
                             @click="cancelOtp"
                             :disabled="formOtp.processing || isCancelling"
                         >
                             Batal
-                        </SecondaryButton>
+                        </Button>
 
-                        <PrimaryButton
+                        <Button
+                            variant="primary"
                             type="submit"
                             :disabled="
                                 formOtp.processing || formOtp.otp.length < 6
@@ -547,7 +549,7 @@ const closeDisableModal = () => {
                                 ></path>
                             </svg>
                             Verifikasi & Aktifkan
-                        </PrimaryButton>
+                        </Button>
                     </div>
                 </form>
             </div>
@@ -620,14 +622,16 @@ const closeDisableModal = () => {
                     </div>
 
                     <div class="mt-6 flex justify-end gap-3">
-                        <SecondaryButton
+                        <Button
+                            variant="secondary"
                             type="button"
                             @click="closeDisableModal"
                         >
                             Batal
-                        </SecondaryButton>
+                        </Button>
 
-                        <DangerButton
+                        <Button
+                            variant="danger"
                             type="submit"
                             :disabled="formDisable.processing"
                         >
@@ -636,7 +640,7 @@ const closeDisableModal = () => {
                                     ? 'Menonaktifkan...'
                                     : 'Ya, Nonaktifkan 2FA'
                             }}
-                        </DangerButton>
+                        </Button>
                     </div>
                 </form>
             </div>
