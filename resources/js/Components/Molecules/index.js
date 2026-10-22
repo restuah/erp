@@ -1,3 +1,6 @@
+export { default as AlertBanner } from './AlertBanner.vue';
+export { default as Breadcrumbs } from './Breadcrumbs.vue';
+export { default as CardSkeleton } from './CardSkeleton.vue';
 export { default as ConfirmDialog } from './ConfirmDialog.vue';
 export { default as Dropdown } from './Dropdown.vue';
 export { default as DropdownLink } from './DropdownLink.vue';
@@ -9,4 +12,5 @@ export { default as Pagination } from './Pagination.vue';
 export { default as SearchInput } from './SearchInput.vue';
 export { default as SidebarLink } from './SidebarLink.vue';
 export { default as StatsCard } from './StatsCard.vue';
+export { default as TableSkeleton } from './TableSkeleton.vue';
 export { default as Tabs } from './Tabs.vue';

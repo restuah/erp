@@ -1,6 +1,7 @@
 <script setup>
 import EmptyState from '../Molecules/EmptyState.vue';
-import Spinner from '../Atoms/Spinner.vue';
+import TableSkeleton from '../Molecules/TableSkeleton.vue';
+import CardSkeleton from '../Molecules/CardSkeleton.vue';
 
 defineProps({
     items: {
@@ -8,6 +9,18 @@ defineProps({
         default: () => [],
     },
     loading: {
+        type: Boolean,
+        default: false,
+    },
+    skeletonRows: {
+        type: Number,
+        default: 5,
+    },
+    skeletonCols: {
+        type: Number,
+        default: 5,
+    },
+    stickyHeader: {
         type: Boolean,
         default: false,
     },
@@ -29,28 +42,48 @@ defineProps({
     },
 });
 
-defineEmits(['empty-action']);
+defineEmits(['empty-action', 'sort']);
 </script>
 
 <template>
     <div class="w-full">
-        <!-- LOADING STATE -->
-        <div
-            v-if="loading"
-            class="flex flex-col items-center justify-center py-16 text-slate-400 dark:text-slate-500"
-        >
-            <Spinner size="h-8 w-8" class="text-blue-600 dark:text-blue-400" />
-            <p
-                class="mt-3 text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-400"
-            >
-                Memuat Data Enterprise...
-            </p>
+        <!-- 1. ZERO-CLS SKELETON LOADING STATE -->
+        <div v-if="loading" class="space-y-4">
+            <slot name="loading">
+                <!-- Mobile Card Skeletons (< md) -->
+                <div v-if="$slots.card" class="block md:hidden">
+                    <CardSkeleton :cards="Math.min(skeletonRows, 4)" />
+                </div>
+
+                <!-- Desktop Table Skeleton (>= md, or always if no card slot) -->
+                <div
+                    :class="[
+                        'shadow-xs overflow-hidden rounded-xl border border-slate-200/90 bg-white dark:border-slate-800 dark:bg-slate-900',
+                        $slots.card ? 'hidden md:block' : 'block',
+                    ]"
+                >
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-start text-xs sm:text-sm">
+                            <thead
+                                v-if="$slots.head"
+                                class="select-none border-b border-slate-200/90 bg-slate-50/90 text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:border-slate-800 dark:bg-slate-850/90 dark:text-slate-400"
+                            >
+                                <slot name="head" />
+                            </thead>
+                            <TableSkeleton
+                                :columns="skeletonCols"
+                                :rows="skeletonRows"
+                            />
+                        </table>
+                    </div>
+                </div>
+            </slot>
         </div>
 
-        <!-- EMPTY STATE -->
+        <!-- 2. EMPTY STATE -->
         <div
             v-else-if="!items || items.length === 0"
-            class="rounded-xl border border-slate-200/90 bg-white dark:border-slate-800 dark:bg-slate-900"
+            class="shadow-xs rounded-xl border border-slate-200/90 bg-white dark:border-slate-800 dark:bg-slate-900"
         >
             <EmptyState
                 :title="emptyTitle"
@@ -65,9 +98,9 @@ defineEmits(['empty-action']);
             </EmptyState>
         </div>
 
-        <!-- DATA VIEW -->
+        <!-- 3. DATA VIEW -->
         <div v-else class="space-y-4">
-            <!-- 1. MOBILE CARD LIST VIEW (< md) -->
+            <!-- MOBILE CARD LIST VIEW (< md) -->
             <div v-if="$slots.card" class="space-y-3 md:hidden">
                 <div
                     v-for="(item, index) in items"
@@ -78,7 +111,7 @@ defineEmits(['empty-action']);
                 </div>
             </div>
 
-            <!-- 2. DESKTOP / TABLET DATA TABLE (>= md, or always if no card slot) -->
+            <!-- DESKTOP / TABLET DATA TABLE (>= md, or always if no card slot) -->
             <div
                 :class="[
                     'shadow-xs overflow-hidden rounded-xl border border-slate-200/90 bg-white dark:border-slate-800 dark:bg-slate-900',
@@ -91,7 +124,10 @@ defineEmits(['empty-action']);
                     >
                         <!-- Table Head -->
                         <thead
-                            class="select-none border-b border-slate-200/90 bg-slate-50/90 text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:border-slate-800 dark:bg-slate-850/90 dark:text-slate-400"
+                            :class="[
+                                'select-none border-b border-slate-200/90 bg-slate-50/90 text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:border-slate-800 dark:bg-slate-850/90 dark:text-slate-400',
+                                stickyHeader ? 'sticky top-0 z-10 backdrop-blur-sm' : '',
+                            ]"
                         >
                             <slot name="head" />
                         </thead>

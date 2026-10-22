@@ -25,16 +25,17 @@ const user = computed(
 
 <template>
     <header
-        class="sticky top-0 z-30 flex h-14 shrink-0 items-center justify-between border-b border-slate-200/90 bg-white/95 px-4 backdrop-blur-md transition-colors duration-200 dark:border-slate-800 dark:bg-slate-900/95 sm:px-6"
+        class="sticky top-0 z-30 flex h-14 shrink-0 items-center justify-between border-b border-slate-200/90 bg-white/95 px-3 backdrop-blur-md transition-colors duration-200 dark:border-slate-800 dark:bg-slate-900/95 sm:px-6"
     >
         <!-- LEFT: Hamburger, Collapse & Quick Context -->
-        <div class="flex items-center gap-3">
+        <div class="flex items-center gap-2 sm:gap-3">
             <!-- Mobile Hamburger Toggle (< lg) -->
             <button
                 type="button"
                 @click="$emit('toggle-mobile-sidebar')"
-                class="cursor-pointer rounded-lg p-1.5 text-slate-500 hover:bg-slate-100 hover:text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-200 lg:hidden"
+                class="flex min-h-[44px] min-w-[44px] sm:min-h-[38px] sm:min-w-[38px] cursor-pointer items-center justify-center rounded-lg p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/20 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-200 lg:hidden"
                 title="Buka Menu Navigasi"
+                aria-label="Buka Menu Navigasi"
             >
                 <Icon name="menu" class="h-5 w-5" />
             </button>
@@ -43,10 +44,11 @@ const user = computed(
             <button
                 type="button"
                 @click="$emit('toggle-collapse')"
-                class="hidden cursor-pointer rounded-lg p-1.5 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-200 lg:flex"
+                class="hidden min-h-[36px] min-w-[36px] cursor-pointer items-center justify-center rounded-lg p-1.5 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/20 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-200 lg:flex"
                 :title="
                     sidebarCollapsed ? 'Perluas Sidebar' : 'Ciutkan Sidebar'
                 "
+                aria-label="Toggle Sidebar"
             >
                 <svg
                     class="h-4.5 w-4.5 transition-transform duration-200"
@@ -82,7 +84,7 @@ const user = computed(
         </div>
 
         <!-- RIGHT: Live BI Rates, Tenant Status, Theme Toggle, User Profile -->
-        <div class="flex items-center gap-2 sm:gap-3">
+        <div class="flex items-center gap-1.5 sm:gap-3">
             <!-- Enterprise Environment Status Pill -->
             <div
                 class="hidden items-center gap-2 rounded-full border border-slate-200/80 bg-slate-50/80 px-2.5 py-1 text-[11px] font-medium text-slate-600 dark:border-slate-800 dark:bg-slate-850/80 dark:text-slate-300 xl:flex"
@@ -106,7 +108,7 @@ const user = computed(
                 <template #trigger>
                     <button
                         type="button"
-                        class="flex cursor-pointer items-center gap-2.5 rounded-lg p-1 text-sm font-medium text-slate-700 transition-all duration-150 hover:bg-slate-100 focus:outline-none dark:text-slate-300 dark:hover:bg-slate-800/80"
+                        class="flex min-h-[44px] sm:min-h-[38px] cursor-pointer items-center gap-2 rounded-lg p-1.5 text-sm font-medium text-slate-700 transition-all duration-150 hover:bg-slate-100 focus:outline-none dark:text-slate-300 dark:hover:bg-slate-800/80"
                     >
                         <Avatar
                             :src="user.avatar_url"

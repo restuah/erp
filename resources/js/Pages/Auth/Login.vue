@@ -32,27 +32,27 @@ const submit = () => {
 
 <template>
     <GuestTemplate>
-        <Head title="Log in" />
+        <Head title="Masuk ke Akun ERP" />
 
         <!-- Header above form -->
-        <div class="mb-6 border-b border-gray-100 pb-4 dark:border-gray-700/80">
+        <div class="mb-6 border-b border-slate-100 pb-4 dark:border-slate-800">
             <h1
-                class="text-lg font-bold tracking-tight text-gray-900 dark:text-white"
+                class="text-lg font-bold tracking-tight text-slate-900 dark:text-white"
             >
                 Masuk ke Akun
             </h1>
-            <p class="text-xs text-gray-500 dark:text-gray-400">
-                Sistem Manajemen Terpadu ERP
+            <p class="text-xs text-slate-500 dark:text-slate-400">
+                Sistem Manajemen Terpadu PT. Hiruta Kogyo Indonesia
             </p>
         </div>
 
-        <div v-if="status" class="mb-4 text-sm font-medium text-green-600">
+        <div v-if="status" class="mb-4 rounded-lg bg-emerald-50 p-3 text-xs font-semibold text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-300">
             {{ status }}
         </div>
 
-        <form @submit.prevent="submit">
+        <form @submit.prevent="submit" class="space-y-4">
             <div>
-                <InputLabel for="email" value="Email" />
+                <InputLabel for="email" value="Alamat Email" required />
 
                 <TextInput
                     id="email"
@@ -62,13 +62,15 @@ const submit = () => {
                     required
                     autofocus
                     autocomplete="username"
+                    placeholder="nama@hiruta-kogyo.co.id"
+                    :error="Boolean(form.errors.email)"
                 />
 
-                <InputError class="mt-2" :message="form.errors.email" />
+                <InputError class="mt-1.5" :message="form.errors.email" />
             </div>
 
-            <div class="mt-4">
-                <InputLabel for="password" value="Password" />
+            <div>
+                <InputLabel for="password" value="Kata Sandi" required />
 
                 <PasswordInput
                     id="password"
@@ -76,38 +78,40 @@ const submit = () => {
                     v-model="form.password"
                     required
                     autocomplete="current-password"
+                    placeholder="Masukkan kata sandi..."
+                    :error="Boolean(form.errors.password)"
                 />
 
-                <InputError class="mt-2" :message="form.errors.password" />
+                <InputError class="mt-1.5" :message="form.errors.password" />
             </div>
 
-            <div class="mt-4 block">
-                <label class="flex items-center">
+            <div class="flex items-center justify-between pt-1">
+                <label class="flex cursor-pointer items-center gap-2">
                     <Checkbox name="remember" v-model:checked="form.remember" />
-                    <span class="ms-2 text-sm text-gray-600 dark:text-gray-400"
-                        >Remember me</span
+                    <span class="text-xs font-medium text-slate-600 dark:text-slate-400"
+                        >Ingat saya di perangkat ini</span
                     >
                 </label>
-            </div>
 
-            <div class="mt-4 flex items-center justify-end">
                 <Link
                     v-if="canResetPassword"
                     :href="route('password.request')"
-                    class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:text-gray-400 dark:hover:text-gray-100 dark:focus:ring-offset-gray-800"
+                    class="text-xs font-semibold text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 focus:outline-none"
                 >
-                    Lupa kata sandi?
+                    Lupa sandi?
                 </Link>
+            </div>
 
+            <div class="pt-2">
                 <Button
                     type="submit"
                     variant="primary"
-                    class="ms-4"
-                    :class="{ 'opacity-25': form.processing }"
+                    size="md"
+                    class="w-full shadow-md shadow-blue-600/20"
                     :disabled="form.processing"
                     :loading="form.processing"
                 >
-                    Log in
+                    Masuk ke Sistem ERP
                 </Button>
             </div>
         </form>

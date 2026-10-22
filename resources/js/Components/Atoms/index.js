@@ -9,6 +9,7 @@ export { default as InputLabel } from './InputLabel.vue';
 export { default as Modal } from './Modal.vue';
 export { default as PasswordInput } from './PasswordInput.vue';
 export { default as SelectInput } from './SelectInput.vue';
+export { default as Skeleton } from './Skeleton.vue';
 export { default as Spinner } from './Spinner.vue';
 export { default as TextInput } from './TextInput.vue';
 export { default as TextareaInput } from './TextareaInput.vue';

@@ -33,6 +33,6 @@ const proxyChecked = computed({
         :value="value"
         v-model="proxyChecked"
         :disabled="disabled"
-        class="shadow-xs h-4 w-4 cursor-pointer rounded border-slate-300 text-blue-600 focus:ring-2 focus:ring-blue-500/20 focus:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-600 dark:bg-slate-800 dark:checked:bg-blue-600 dark:focus:ring-offset-slate-900"
+        class="shadow-xs h-5 w-5 sm:h-4 sm:w-4 cursor-pointer rounded-md border-slate-300 text-blue-600 focus:ring-2 focus:ring-blue-500/20 focus:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-700 dark:bg-slate-900 dark:checked:bg-blue-600 dark:focus:ring-offset-slate-950 transition-colors"
     />
 </template>

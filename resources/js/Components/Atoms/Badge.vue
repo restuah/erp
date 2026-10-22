@@ -18,9 +18,13 @@ const props = defineProps({
     size: {
         type: String,
         default: 'md',
-        validator: (value) => ['sm', 'md'].includes(value),
+        validator: (value) => ['xs', 'sm', 'md'].includes(value),
     },
     dot: {
+        type: Boolean,
+        default: false,
+    },
+    pulse: {
         type: Boolean,
         default: false,
     },
@@ -66,10 +70,12 @@ const dotClasses = computed(() => {
 <template>
     <span
         :class="[
-            'inline-flex select-none items-center rounded-full border font-medium tracking-tight',
-            size === 'sm'
-                ? 'gap-1 px-2 py-0.5 text-[11px]'
-                : 'gap-1.5 px-2.5 py-0.5 text-xs',
+            'inline-flex select-none items-center rounded-full border font-semibold tracking-tight',
+            size === 'xs'
+                ? 'gap-1 px-1.5 py-0.2 text-[10px]'
+                : size === 'sm'
+                  ? 'gap-1 px-2 py-0.5 text-[11px]'
+                  : 'gap-1.5 px-2.5 py-0.5 text-xs',
             variantClasses,
         ]"
     >
@@ -77,7 +83,8 @@ const dotClasses = computed(() => {
             v-if="dot"
             :class="[
                 'shrink-0 rounded-full',
-                size === 'sm' ? 'h-1.5 w-1.5' : 'h-2 w-2',
+                size === 'xs' ? 'h-1.5 w-1.5' : size === 'sm' ? 'h-1.5 w-1.5' : 'h-2 w-2',
+                pulse ? 'animate-pulse' : '',
                 dotClasses,
             ]"
             aria-hidden="true"

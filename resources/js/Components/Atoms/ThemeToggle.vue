@@ -19,7 +19,7 @@ const { isDark, toggleTheme } = useTheme();
         :aria-label="
             isDark ? 'Beralih ke Mode Terang' : 'Beralih ke Mode Gelap'
         "
-        class="shadow-xs group relative inline-flex cursor-pointer items-center justify-center rounded-lg border border-slate-200 bg-white p-2 text-slate-500 transition-all duration-200 hover:border-slate-300 hover:bg-slate-50 hover:text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500/40 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-slate-600 dark:hover:bg-slate-700/70 dark:hover:text-slate-200"
+        class="shadow-xs group relative inline-flex cursor-pointer items-center justify-center min-h-[44px] min-w-[44px] sm:min-h-[38px] sm:min-w-[38px] rounded-lg border border-slate-200/90 bg-white p-2 text-slate-500 transition-all duration-200 hover:border-slate-300 hover:bg-slate-50 hover:text-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400 dark:hover:border-slate-600 dark:hover:bg-slate-800 dark:hover:text-slate-200"
     >
         <!-- Sun Icon (shown when dark mode is active) -->
         <svg
@@ -64,9 +64,9 @@ const { isDark, toggleTheme } = useTheme();
 
         <span
             v-if="showLabel"
-            class="ms-2 text-xs font-medium text-slate-700 dark:text-slate-300"
+            class="ms-2 text-xs font-semibold text-slate-700 dark:text-slate-300"
         >
-            {{ isDark ? 'Light' : 'Dark' }}
+            {{ isDark ? 'Terang' : 'Gelap' }}
         </span>
     </button>
 </template>

@@ -6,7 +6,7 @@ import ThemeToggle from '../Atoms/ThemeToggle.vue';
 
 <template>
     <div
-        class="relative flex min-h-screen flex-col items-center justify-center bg-slate-50 p-4 transition-colors duration-200 dark:bg-slate-900 sm:p-6"
+        class="relative flex min-h-screen flex-col items-center justify-center bg-slate-50 p-4 transition-colors duration-200 dark:bg-slate-950 sm:p-6"
     >
         <!-- Top Theme Toggle Floating -->
         <div class="absolute end-4 top-4">
@@ -28,19 +28,19 @@ import ThemeToggle from '../Atoms/ThemeToggle.vue';
                         <span
                             class="text-xl font-bold tracking-tight text-slate-900 dark:text-white"
                         >
-                            ERP System
+                            PT. Hiruta Kogyo Indonesia
                         </span>
                         <p
                             class="text-xs font-semibold uppercase tracking-wider text-blue-600 dark:text-blue-400"
                         >
-                            Enterprise Suite
+                            Enterprise ERP Suite &bull; v2.4
                         </p>
                     </div>
                 </Link>
             </div>
 
             <div
-                class="w-full overflow-hidden rounded-2xl border border-slate-200/80 bg-white p-6 shadow-xl transition-colors duration-200 dark:border-slate-700/60 dark:bg-slate-800 sm:p-8"
+                class="w-full overflow-hidden rounded-2xl border border-slate-200/90 bg-white p-6 shadow-xl transition-colors duration-200 dark:border-slate-800 dark:bg-slate-900 sm:p-8"
             >
                 <slot />
             </div>
@@ -48,8 +48,7 @@ import ThemeToggle from '../Atoms/ThemeToggle.vue';
             <p
                 class="mt-6 text-center text-xs text-slate-400 dark:text-slate-500"
             >
-                &copy; {{ new Date().getFullYear() }} ERP System. Enterprise
-                Management Platform.
+                &copy; {{ new Date().getFullYear() }} PT. Hiruta Kogyo Indonesia &bull; Enterprise Resource Planning
             </p>
         </div>
     </div>

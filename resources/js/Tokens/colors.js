@@ -1,6 +1,6 @@
 /**
  * Color Design Tokens (Quarks)
- * Business-friendly ERP color palette with light and dark mode tokens
+ * Business-friendly ERP color palette with verified light and dark mode tokens
  */
 export const colors = {
     // Brand primary colors (Enterprise Corporate Blue)
@@ -11,7 +11,7 @@ export const colors = {
         300: '#93C5FD',
         400: '#60A5FA',
         500: '#3B82F6',
-        600: '#2563EB', // Main Primary
+        600: '#2563EB', // Main Primary (Light)
         700: '#1D4ED8',
         800: '#1E40AF',
         900: '#1E3A8A',
@@ -29,11 +29,30 @@ export const colors = {
         600: '#475569',
         700: '#334155',
         800: '#1E293B',
-        900: '#0F172A',
-        950: '#020617',
+        850: '#131B2E', // Deep Table Header / Subsurface
+        900: '#0F172A', // Main Dark Card Surface
+        950: '#020617', // Main Dark Canvas Background
     },
 
-    // Semantic Status Colors
+    // Dual-Mode Surface Tokens
+    canvas: {
+        light: '#F8FAFC',
+        dark: '#020617',
+    },
+    surface: {
+        light: '#FFFFFF',
+        dark: '#0F172A',
+    },
+    subsurface: {
+        light: '#F1F5F9',
+        dark: '#131B2E',
+    },
+    border: {
+        light: '#E2E8F0',
+        dark: '#1E293B',
+    },
+
+    // Semantic Status Colors (Verified WCAG AA Contrast)
     success: {
         light: '#ECFDF5',
         border: '#A7F3D0',
