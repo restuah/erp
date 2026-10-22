@@ -90,7 +90,7 @@ const iconContainerClasses = computed(() => {
     <div
         @click="clickable && $emit('click')"
         :class="[
-            'p-4.5 shadow-xs relative flex flex-col justify-between overflow-hidden rounded-xl border border-slate-200/90 bg-white transition-all duration-200 dark:border-slate-800 dark:bg-slate-900 sm:p-5',
+            'shadow-xs relative flex flex-col justify-between overflow-hidden rounded-xl border border-slate-200/90 bg-white p-4.5 transition-all duration-200 dark:border-slate-800 dark:bg-slate-900 sm:p-5',
             clickable
                 ? 'cursor-pointer hover:border-blue-300 hover:shadow-md dark:hover:border-blue-500/50'
                 : '',

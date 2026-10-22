@@ -34,7 +34,7 @@ const props = defineProps({
     system_info: {
         type: Object,
         default: () => ({
-            company_name: 'PT. Mandiri Jaya Utama',
+            company_name: 'PT. Hiruta Kogyo Indonesia',
             branch: 'Kantor Pusat (HQ)',
             environment: 'production',
             timezone: 'Asia/Jakarta (WIB)',

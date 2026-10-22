@@ -84,6 +84,14 @@ class ChartOfAccount extends Model
     }
 
     /**
+     * Relasi ke daftar customer yang menggunakan akun ini sebagai akun piutang usaha (AR).
+     */
+    public function customers(): HasMany
+    {
+        return $this->hasMany(Customer::class, 'coa_receivable_id');
+    }
+
+    /**
      * User pembuat.
      */
     public function creator(): BelongsTo

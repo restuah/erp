@@ -6,6 +6,8 @@ use App\Models\Budget;
 use App\Models\BudgetClassification;
 use App\Models\ChartOfAccount;
 use App\Models\Currency;
+use App\Models\Customer;
+use App\Models\Department;
 use App\Models\ExchangeRate;
 use App\Models\Permission;
 use App\Models\Role;
@@ -23,18 +25,62 @@ use Inertia\Response;
 class RecycleBinController extends Controller
 {
     /**
+     * Map recycle bin resource types to permission prefixes.
+     *
+     * @var array<string, string>
+     */
+    protected array $typePermissionMap = [
+        'users' => 'users',
+        'roles' => 'roles',
+        'permissions' => 'permissions',
+        'currencies' => 'currencies',
+        'exchange_rates' => 'exchange_rates',
+        'budgets' => 'budgets',
+        'budget_classifications' => 'budget_classifications',
+        'chart_of_accounts' => 'coa',
+        'unit_of_measures' => 'uom',
+        'term_of_payments' => 'term_of_payments',
+        'suppliers' => 'suppliers',
+        'customers' => 'customers',
+        'departments' => 'departments',
+    ];
+
+    /**
      * Display a listing of the soft-deleted resources.
      */
     public function index(Request $request): Response
     {
-        $allowedTypes = ['users', 'roles', 'permissions', 'currencies', 'exchange_rates', 'budgets', 'budget_classifications', 'chart_of_accounts', 'unit_of_measures', 'term_of_payments', 'suppliers'];
-        $activeTab = in_array($request->input('type'), $allowedTypes)
-            ? $request->input('type')
-            : 'users';
+        $user = $request->user();
+        $isSuperadmin = $user->hasRole('Superadmin');
+        $hasGeneralAccess = $isSuperadmin || $user->can('recycle_bin.view');
+
+        // Filter allowed types based on user permissions
+        $allowedTypes = array_values(array_filter(
+            array_keys($this->typePermissionMap),
+            function ($type) use ($user, $hasGeneralAccess) {
+                if ($hasGeneralAccess) {
+                    return true;
+                }
+                $perm = $this->typePermissionMap[$type];
+                return $user->can("{$perm}.restore") || $user->can("{$perm}.force_delete");
+            }
+        ));
+
+        // If user has neither Superadmin nor permission for any category, forbid access
+        abort_if(empty($allowedTypes), 403, 'Akses ke Tempat Sampah ditolak.');
+
+        $requestedType = $request->input('type');
+        $activeTab = in_array($requestedType, $allowedTypes)
+            ? $requestedType
+            : $allowedTypes[0];
+
+        $currentPerm = $this->typePermissionMap[$activeTab] ?? $activeTab;
+        $canRestore = $isSuperadmin || $user->can("{$currentPerm}.restore");
+        $canForceDelete = $isSuperadmin || $user->can("{$currentPerm}.force_delete");
 
         $search = $request->input('search');
 
-        $counts = [
+        $allCounts = [
             'users' => User::onlyTrashed()->count(),
             'roles' => Role::onlyTrashed()->count(),
             'permissions' => Permission::onlyTrashed()->count(),
@@ -46,7 +92,10 @@ class RecycleBinController extends Controller
             'unit_of_measures' => UnitOfMeasure::onlyTrashed()->count(),
             'term_of_payments' => TermOfPayment::onlyTrashed()->count(),
             'suppliers' => Supplier::onlyTrashed()->count(),
+            'customers' => Customer::onlyTrashed()->count(),
+            'departments' => Department::onlyTrashed()->count(),
         ];
+        $counts = array_intersect_key($allCounts, array_flip($allowedTypes));
 
         $items = match ($activeTab) {
             'users' => User::onlyTrashed()
@@ -162,12 +211,38 @@ class RecycleBinController extends Controller
                 ->latest('deleted_at')
                 ->paginate(10)
                 ->withQueryString(),
+
+            'customers' => Customer::onlyTrashed()
+                ->with(['termOfPayment:id,payment,name', 'currency:id,code,name'])
+                ->when($search, function ($q, $search) {
+                    $q->where('customer_code', 'like', "%{$search}%")
+                        ->orWhere('name', 'like', "%{$search}%")
+                        ->orWhere('alias', 'like', "%{$search}%")
+                        ->orWhere('contact_person', 'like', "%{$search}%");
+                })
+                ->latest('deleted_at')
+                ->paginate(10)
+                ->withQueryString(),
+
+            'departments' => Department::onlyTrashed()
+                ->with('manager:id,name')
+                ->when($search, function ($q, $search) {
+                    $q->where('code', 'like', "%{$search}%")
+                        ->orWhere('name', 'like', "%{$search}%")
+                        ->orWhere('description', 'like', "%{$search}%");
+                })
+                ->latest('deleted_at')
+                ->paginate(10)
+                ->withQueryString(),
         };
 
         return Inertia::render('RecycleBin/Index', [
             'items' => $items,
             'counts' => $counts,
             'activeTab' => $activeTab,
+            'allowedTypes' => $allowedTypes,
+            'canRestore' => $canRestore,
+            'canForceDelete' => $canForceDelete,
             'filters' => [
                 'search' => $search,
             ],
@@ -179,6 +254,16 @@ class RecycleBinController extends Controller
      */
     public function restore(string $type, string $id): RedirectResponse
     {
+        $perm = $this->typePermissionMap[$type] ?? null;
+        abort_unless($perm, 404);
+
+        $user = auth()->user();
+        abort_unless(
+            $user->hasRole('Superadmin') || $user->can("{$perm}.restore"),
+            403,
+            'Anda tidak memiliki izin untuk memulihkan data ini.'
+        );
+
         match ($type) {
             'users' => User::onlyTrashed()->findOrFail($id)->restore(),
             'roles' => Role::onlyTrashed()->findOrFail($id)->restore(),
@@ -191,6 +276,8 @@ class RecycleBinController extends Controller
             'unit_of_measures' => UnitOfMeasure::onlyTrashed()->findOrFail($id)->restore(),
             'term_of_payments' => TermOfPayment::onlyTrashed()->findOrFail($id)->restore(),
             'suppliers' => Supplier::onlyTrashed()->findOrFail($id)->restore(),
+            'customers' => Customer::onlyTrashed()->findOrFail($id)->restore(),
+            'departments' => Department::onlyTrashed()->findOrFail($id)->restore(),
             default => abort(404),
         };
 
@@ -202,6 +289,16 @@ class RecycleBinController extends Controller
      */
     public function forceDelete(string $type, string $id): RedirectResponse
     {
+        $perm = $this->typePermissionMap[$type] ?? null;
+        abort_unless($perm, 404);
+
+        $user = auth()->user();
+        abort_unless(
+            $user->hasRole('Superadmin') || $user->can("{$perm}.force_delete"),
+            403,
+            'Anda tidak memiliki izin untuk menghapus permanen data ini.'
+        );
+
         match ($type) {
             'users' => (function () use ($id) {
                 $user = User::onlyTrashed()->findOrFail($id);
@@ -220,6 +317,8 @@ class RecycleBinController extends Controller
             'unit_of_measures' => UnitOfMeasure::onlyTrashed()->findOrFail($id)->forceDelete(),
             'term_of_payments' => TermOfPayment::onlyTrashed()->findOrFail($id)->forceDelete(),
             'suppliers' => Supplier::onlyTrashed()->findOrFail($id)->forceDelete(),
+            'customers' => Customer::onlyTrashed()->findOrFail($id)->forceDelete(),
+            'departments' => Department::onlyTrashed()->findOrFail($id)->forceDelete(),
             default => abort(404),
         };
 
@@ -231,6 +330,16 @@ class RecycleBinController extends Controller
      */
     public function restoreAll(string $type): RedirectResponse
     {
+        $perm = $this->typePermissionMap[$type] ?? null;
+        abort_unless($perm, 404);
+
+        $user = auth()->user();
+        abort_unless(
+            $user->hasRole('Superadmin') || $user->can("{$perm}.restore"),
+            403,
+            'Anda tidak memiliki izin untuk memulihkan data ini.'
+        );
+
         $count = match ($type) {
             'users' => User::onlyTrashed()->count(),
             'roles' => Role::onlyTrashed()->count(),
@@ -243,6 +352,8 @@ class RecycleBinController extends Controller
             'unit_of_measures' => UnitOfMeasure::onlyTrashed()->count(),
             'term_of_payments' => TermOfPayment::onlyTrashed()->count(),
             'suppliers' => Supplier::onlyTrashed()->count(),
+            'customers' => Customer::onlyTrashed()->count(),
+            'departments' => Department::onlyTrashed()->count(),
             default => abort(404),
         };
 
@@ -258,6 +369,8 @@ class RecycleBinController extends Controller
             'unit_of_measures' => UnitOfMeasure::onlyTrashed()->restore(),
             'term_of_payments' => TermOfPayment::onlyTrashed()->restore(),
             'suppliers' => Supplier::onlyTrashed()->restore(),
+            'customers' => Customer::onlyTrashed()->restore(),
+            'departments' => Department::onlyTrashed()->restore(),
         };
 
         ActivityLogger::log(
@@ -279,6 +392,16 @@ class RecycleBinController extends Controller
      */
     public function empty(string $type): RedirectResponse
     {
+        $perm = $this->typePermissionMap[$type] ?? null;
+        abort_unless($perm, 404);
+
+        $user = auth()->user();
+        abort_unless(
+            $user->hasRole('Superadmin') || $user->can("{$perm}.force_delete"),
+            403,
+            'Anda tidak memiliki izin untuk mengosongkan tempat sampah ini.'
+        );
+
         $count = match ($type) {
             'users' => User::onlyTrashed()->count(),
             'roles' => Role::onlyTrashed()->count(),
@@ -291,6 +414,8 @@ class RecycleBinController extends Controller
             'unit_of_measures' => UnitOfMeasure::onlyTrashed()->count(),
             'term_of_payments' => TermOfPayment::onlyTrashed()->count(),
             'suppliers' => Supplier::onlyTrashed()->count(),
+            'customers' => Customer::onlyTrashed()->count(),
+            'departments' => Department::onlyTrashed()->count(),
             default => abort(404),
         };
 
@@ -314,6 +439,8 @@ class RecycleBinController extends Controller
             'unit_of_measures' => UnitOfMeasure::onlyTrashed()->forceDelete(),
             'term_of_payments' => TermOfPayment::onlyTrashed()->forceDelete(),
             'suppliers' => Supplier::onlyTrashed()->forceDelete(),
+            'customers' => Customer::onlyTrashed()->forceDelete(),
+            'departments' => Department::onlyTrashed()->forceDelete(),
         };
 
         ActivityLogger::log(

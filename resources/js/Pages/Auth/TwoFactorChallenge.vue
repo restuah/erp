@@ -226,8 +226,7 @@ const cancelChallenge = () => {
                     class="text-xs text-gray-500 dark:text-gray-400"
                 >
                     Kirim ulang kode dalam
-                    <span
-                        class="font-semibold text-blue-600 dark:text-blue-400"
+                    <span class="font-semibold text-blue-600 dark:text-blue-400"
                         >{{ currentCooldown }}s</span
                     >
                 </p>

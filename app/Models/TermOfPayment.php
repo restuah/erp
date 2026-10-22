@@ -73,6 +73,14 @@ class TermOfPayment extends Model
     }
 
     /**
+     * Relasi ke daftar customer yang menggunakan termin ini.
+     */
+    public function customers(): HasMany
+    {
+        return $this->hasMany(Customer::class, 'term_of_payment_id');
+    }
+
+    /**
      * Relasi ke user pembuat data.
      */
     public function creator(): BelongsTo

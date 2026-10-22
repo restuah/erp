@@ -6,7 +6,9 @@ use App\Http\Controllers\BudgetClassificationController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\ChartOfAccountController;
 use App\Http\Controllers\CurrencyController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\ExchangeRateController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProfileController;
@@ -94,14 +96,12 @@ Route::middleware('auth')->group(function () {
     });
     Route::middleware('permission:permissions.delete')->delete('permissions/{permission}', [PermissionController::class, 'destroy'])->name('permissions.destroy');
 
-    // Recycle Bin Module (Superadmin exclusive)
-    Route::middleware('role:Superadmin')->group(function () {
-        Route::get('/recycle-bin', [RecycleBinController::class, 'index'])->name('recycle-bin.index');
-        Route::post('/recycle-bin/{type}/{id}/restore', [RecycleBinController::class, 'restore'])->name('recycle-bin.restore');
-        Route::delete('/recycle-bin/{type}/{id}/force-delete', [RecycleBinController::class, 'forceDelete'])->name('recycle-bin.force-delete');
-        Route::post('/recycle-bin/{type}/restore-all', [RecycleBinController::class, 'restoreAll'])->name('recycle-bin.restore-all');
-        Route::delete('/recycle-bin/{type}/empty', [RecycleBinController::class, 'empty'])->name('recycle-bin.empty');
-    });
+    // Recycle Bin Module (Access governed by granular restore/force_delete permissions with Superadmin bypass)
+    Route::get('/recycle-bin', [RecycleBinController::class, 'index'])->name('recycle-bin.index');
+    Route::post('/recycle-bin/{type}/{id}/restore', [RecycleBinController::class, 'restore'])->name('recycle-bin.restore');
+    Route::delete('/recycle-bin/{type}/{id}/force-delete', [RecycleBinController::class, 'forceDelete'])->name('recycle-bin.force-delete');
+    Route::post('/recycle-bin/{type}/restore-all', [RecycleBinController::class, 'restoreAll'])->name('recycle-bin.restore-all');
+    Route::delete('/recycle-bin/{type}/empty', [RecycleBinController::class, 'empty'])->name('recycle-bin.empty');
 
     // Activity Logs Module (Audit Trail)
     Route::middleware('permission:activity_logs.view')->group(function () {
@@ -176,6 +176,24 @@ Route::middleware('auth')->group(function () {
         Route::middleware('permission:suppliers.create')->post('suppliers', [SupplierController::class, 'store'])->name('suppliers.store');
         Route::middleware('permission:suppliers.edit')->match(['put', 'patch'], 'suppliers/{supplier}', [SupplierController::class, 'update'])->name('suppliers.update');
         Route::middleware('permission:suppliers.delete')->delete('suppliers/{supplier}', [SupplierController::class, 'destroy'])->name('suppliers.destroy');
+
+        // Master Customer (Pelanggan / Mitra Sales & AR)
+        Route::middleware('permission:customers.view')->group(function () {
+            Route::get('customers', [CustomerController::class, 'index'])->name('customers.index');
+            Route::get('customers/generate-code', [CustomerController::class, 'generateCode'])->name('customers.generate-code');
+        });
+        Route::middleware('permission:customers.create')->post('customers', [CustomerController::class, 'store'])->name('customers.store');
+        Route::middleware('permission:customers.edit')->match(['put', 'patch'], 'customers/{customer}', [CustomerController::class, 'update'])->name('customers.update');
+        Route::middleware('permission:customers.delete')->delete('customers/{customer}', [CustomerController::class, 'destroy'])->name('customers.destroy');
+
+        // Master Departemen (Departments)
+        Route::middleware('permission:departments.view')->group(function () {
+            Route::get('departments', [DepartmentController::class, 'index'])->name('departments.index');
+            Route::get('departments/{department}', [DepartmentController::class, 'show'])->name('departments.show');
+        });
+        Route::middleware('permission:departments.create')->post('departments', [DepartmentController::class, 'store'])->name('departments.store');
+        Route::middleware('permission:departments.edit')->match(['put', 'patch'], 'departments/{department}', [DepartmentController::class, 'update'])->name('departments.update');
+        Route::middleware('permission:departments.delete')->delete('departments/{department}', [DepartmentController::class, 'destroy'])->name('departments.destroy');
     });
 });
 

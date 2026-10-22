@@ -24,6 +24,12 @@ class RoutePermissionProtectionTest extends TestCase
         $response = $this->get(route('suppliers.index'));
         $response->assertRedirect(route('login'));
 
+        $response = $this->get(route('departments.index'));
+        $response->assertRedirect(route('login'));
+
+        $response = $this->get(route('customers.index'));
+        $response->assertRedirect(route('login'));
+
         $response = $this->get(route('users.index'));
         $response->assertRedirect(route('login'));
     }
@@ -37,6 +43,14 @@ class RoutePermissionProtectionTest extends TestCase
 
         // Accessing suppliers (requires 'suppliers.view') should return 403 Forbidden
         $response = $this->actingAs($user)->get(route('suppliers.index'));
+        $response->assertForbidden();
+
+        // Accessing departments (requires 'departments.view') should return 403 Forbidden
+        $response = $this->actingAs($user)->get(route('departments.index'));
+        $response->assertForbidden();
+
+        // Accessing customers (requires 'customers.view') should return 403 Forbidden
+        $response = $this->actingAs($user)->get(route('customers.index'));
         $response->assertForbidden();
 
         // Accessing budgets (requires 'budgets.view') should return 403 Forbidden
@@ -77,6 +91,8 @@ class RoutePermissionProtectionTest extends TestCase
         $superadmin->assignRole('Superadmin');
 
         $this->actingAs($superadmin)->get(route('suppliers.index'))->assertOk();
+        $this->actingAs($superadmin)->get(route('departments.index'))->assertOk();
+        $this->actingAs($superadmin)->get(route('customers.index'))->assertOk();
         $this->actingAs($superadmin)->get(route('budgets.index'))->assertOk();
         $this->actingAs($superadmin)->get(route('roles.index'))->assertOk();
         $this->actingAs($superadmin)->get(route('recycle-bin.index'))->assertOk();

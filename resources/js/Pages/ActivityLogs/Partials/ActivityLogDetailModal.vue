@@ -31,9 +31,7 @@ const closeModal = () => {
 const copyRawJson = async () => {
     if (!props.log) return;
     try {
-        await navigator.clipboard.writeText(
-            JSON.stringify(props.log, null, 2),
-        );
+        await navigator.clipboard.writeText(JSON.stringify(props.log, null, 2));
         copiedJson.value = true;
         setTimeout(() => {
             copiedJson.value = false;
@@ -183,8 +181,12 @@ const formatPropertyValue = (val) => {
                             class="mt-0.5 flex flex-wrap items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400"
                         >
                             <span>{{ formatDateTime(log.created_at) }}</span>
-                            <span class="text-gray-300 dark:text-gray-600">•</span>
-                            <span class="font-medium text-gray-600 dark:text-gray-300">
+                            <span class="text-gray-300 dark:text-gray-600"
+                                >•</span
+                            >
+                            <span
+                                class="font-medium text-gray-600 dark:text-gray-300"
+                            >
                                 {{ timeAgo(log.created_at) }}
                             </span>
                         </div>
@@ -394,10 +396,14 @@ const formatPropertyValue = (val) => {
                                 class="grid grid-cols-12 gap-3 rounded-lg bg-gray-50 px-4 py-2.5 text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:bg-gray-900/60 dark:text-gray-400"
                             >
                                 <div class="col-span-3">Kolom / Atribut</div>
-                                <div class="col-span-4 text-rose-600 dark:text-rose-400">
+                                <div
+                                    class="col-span-4 text-rose-600 dark:text-rose-400"
+                                >
                                     Nilai Sebelum (Old)
                                 </div>
-                                <div class="col-span-5 text-emerald-600 dark:text-emerald-400">
+                                <div
+                                    class="col-span-5 text-emerald-600 dark:text-emerald-400"
+                                >
                                     Nilai Sesudah (New)
                                 </div>
                             </div>
@@ -442,8 +448,12 @@ const formatPropertyValue = (val) => {
                                     class="border-b border-gray-200 bg-gray-50 text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:border-gray-700 dark:bg-gray-900/50 dark:text-gray-400"
                                 >
                                     <tr>
-                                        <th class="w-1/3 px-4 py-3 text-start">Kolom / Atribut</th>
-                                        <th class="w-2/3 px-4 py-3 text-start">Nilai Tercatat</th>
+                                        <th class="w-1/3 px-4 py-3 text-start">
+                                            Kolom / Atribut
+                                        </th>
+                                        <th class="w-2/3 px-4 py-3 text-start">
+                                            Nilai Tercatat
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody
@@ -477,7 +487,8 @@ const formatPropertyValue = (val) => {
                             v-else
                             class="rounded-lg border border-dashed border-gray-200 p-8 text-center text-xs text-gray-400 dark:border-gray-700 dark:text-gray-500"
                         >
-                            Tidak ada rincian atribut data spesifik yang diubah pada proses ini.
+                            Tidak ada rincian atribut data spesifik yang diubah
+                            pada proses ini.
                         </div>
                     </div>
 

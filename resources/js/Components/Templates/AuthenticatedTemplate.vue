@@ -90,8 +90,9 @@ onUnmounted(() => {
                 <footer
                     class="backdrop-blur-xs mt-auto shrink-0 border-t border-slate-200/70 bg-white/40 py-3.5 text-center text-xs text-slate-400 transition-colors dark:border-slate-800/80 dark:bg-slate-900/40 dark:text-slate-500"
                 >
-                    &copy; {{ new Date().getFullYear() }} PT. Mandiri Jaya Utama
-                    &bull; Enterprise Resource Planning (ERP) Suite &bull; v2.4
+                    &copy; {{ new Date().getFullYear() }} PT. Hiruta Kogyo
+                    Indonesia &bull; Enterprise Resource Planning (ERP) Suite
+                    &bull; v2.4
                 </footer>
             </div>
         </div>

@@ -90,7 +90,7 @@ const user = computed(
                 <span
                     class="h-2 w-2 animate-pulse rounded-full bg-emerald-500"
                 ></span>
-                <span>PT. Mandiri Jaya Utama &bull; HQ</span>
+                <span>PT. Hiruta Kogyo Indonesia &bull; HQ</span>
             </div>
 
             <!-- Exchange Rate Widget -->

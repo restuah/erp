@@ -11,8 +11,22 @@ const props = defineProps({
     items: Object,
     counts: Object,
     activeTab: String,
+    allowedTypes: {
+        type: Array,
+        default: () => [],
+    },
+    canRestore: {
+        type: Boolean,
+        default: true,
+    },
+    canForceDelete: {
+        type: Boolean,
+        default: true,
+    },
     filters: Object,
 });
+
+const isTabAllowed = (tab) => !props.allowedTypes?.length || props.allowedTypes.includes(tab);
 
 const search = ref(props.filters.search || '');
 
@@ -115,6 +129,7 @@ const executeEmptyTrash = () => {
                 <template #actions>
                     <div v-if="items.total > 0" class="flex items-center gap-2">
                         <Button
+                            v-if="canRestore"
                             variant="secondary"
                             size="sm"
                             @click="showRestoreAllModal = true"
@@ -138,6 +153,7 @@ const executeEmptyTrash = () => {
                             <span>Pulihkan Semua</span>
                         </Button>
                         <Button
+                            v-if="canForceDelete"
                             variant="danger"
                             size="sm"
                             @click="showEmptyTrashModal = true"
@@ -170,6 +186,7 @@ const executeEmptyTrash = () => {
             <div class="border-b border-gray-200 dark:border-gray-700/80">
                 <nav class="-mb-px flex space-x-6" aria-label="Tabs">
                     <button
+                        v-if="isTabAllowed('users')"
                         type="button"
                         @click="switchTab('users')"
                         class="group inline-flex items-center gap-2 border-b-2 px-1 py-3 text-sm font-medium transition-colors"
@@ -207,6 +224,7 @@ const executeEmptyTrash = () => {
                     </button>
 
                     <button
+                        v-if="isTabAllowed('roles')"
                         type="button"
                         @click="switchTab('roles')"
                         class="group inline-flex items-center gap-2 border-b-2 px-1 py-3 text-sm font-medium transition-colors"
@@ -244,6 +262,7 @@ const executeEmptyTrash = () => {
                     </button>
 
                     <button
+                        v-if="isTabAllowed('permissions')"
                         type="button"
                         @click="switchTab('permissions')"
                         class="group inline-flex items-center gap-2 border-b-2 px-1 py-3 text-sm font-medium transition-colors"
@@ -281,6 +300,7 @@ const executeEmptyTrash = () => {
                     </button>
 
                     <button
+                        v-if="isTabAllowed('currencies')"
                         type="button"
                         @click="switchTab('currencies')"
                         class="group inline-flex items-center gap-2 border-b-2 px-1 py-3 text-sm font-medium transition-colors"
@@ -318,6 +338,7 @@ const executeEmptyTrash = () => {
                     </button>
 
                     <button
+                        v-if="isTabAllowed('budgets')"
                         type="button"
                         @click="switchTab('budgets')"
                         class="group inline-flex items-center gap-2 border-b-2 px-1 py-3 text-sm font-medium transition-colors"
@@ -355,6 +376,7 @@ const executeEmptyTrash = () => {
                     </button>
 
                     <button
+                        v-if="isTabAllowed('budget_classifications')"
                         type="button"
                         @click="switchTab('budget_classifications')"
                         class="group inline-flex items-center gap-2 border-b-2 px-1 py-3 text-sm font-medium transition-colors"
@@ -392,6 +414,7 @@ const executeEmptyTrash = () => {
                     </button>
 
                     <button
+                        v-if="isTabAllowed('chart_of_accounts')"
                         type="button"
                         @click="switchTab('chart_of_accounts')"
                         class="group inline-flex items-center gap-2 border-b-2 px-1 py-3 text-sm font-medium transition-colors"
@@ -429,6 +452,7 @@ const executeEmptyTrash = () => {
                     </button>
 
                     <button
+                        v-if="isTabAllowed('unit_of_measures')"
                         type="button"
                         @click="switchTab('unit_of_measures')"
                         class="group inline-flex items-center gap-2 border-b-2 px-1 py-3 text-sm font-medium transition-colors"
@@ -466,6 +490,7 @@ const executeEmptyTrash = () => {
                     </button>
 
                     <button
+                        v-if="isTabAllowed('term_of_payments')"
                         type="button"
                         @click="switchTab('term_of_payments')"
                         class="group inline-flex items-center gap-2 border-b-2 px-1 py-3 text-sm font-medium transition-colors"
@@ -503,6 +528,7 @@ const executeEmptyTrash = () => {
                     </button>
 
                     <button
+                        v-if="isTabAllowed('suppliers')"
                         type="button"
                         @click="switchTab('suppliers')"
                         class="group inline-flex items-center gap-2 border-b-2 px-1 py-3 text-sm font-medium transition-colors"
@@ -536,6 +562,82 @@ const executeEmptyTrash = () => {
                             "
                         >
                             {{ counts.suppliers }}
+                        </span>
+                    </button>
+
+                    <button
+                        v-if="isTabAllowed('customers')"
+                        type="button"
+                        @click="switchTab('customers')"
+                        class="group inline-flex items-center gap-2 border-b-2 px-1 py-3 text-sm font-medium transition-colors"
+                        :class="
+                            activeTab === 'customers'
+                                ? 'border-blue-600 text-blue-600 dark:border-blue-400 dark:text-blue-400'
+                                : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
+                        "
+                    >
+                        <svg
+                            class="h-4 w-4"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                            />
+                        </svg>
+                        Customer
+                        <span
+                            class="rounded-full px-2 py-0.5 text-xs font-bold"
+                            :class="
+                                counts.customers > 0
+                                    ? 'bg-red-100 text-red-700 dark:bg-red-950/60 dark:text-red-300'
+                                    : 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400'
+                            "
+                        >
+                            {{ counts.customers }}
+                        </span>
+                    </button>
+
+                    <button
+                        v-if="isTabAllowed('departments')"
+                        type="button"
+                        @click="switchTab('departments')"
+                        class="group inline-flex items-center gap-2 border-b-2 px-1 py-3 text-sm font-medium transition-colors"
+                        :class="
+                            activeTab === 'departments'
+                                ? 'border-blue-600 text-blue-600 dark:border-blue-400 dark:text-blue-400'
+                                : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
+                        "
+                    >
+                        <svg
+                            class="h-4 w-4"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                            />
+                        </svg>
+                        Departemen
+                        <span
+                            class="rounded-full px-2 py-0.5 text-xs font-bold"
+                            :class="
+                                counts.departments > 0
+                                    ? 'bg-red-100 text-red-700 dark:bg-red-950/60 dark:text-red-300'
+                                    : 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400'
+                            "
+                        >
+                            {{ counts.departments }}
                         </span>
                     </button>
                 </nav>
@@ -1799,6 +1901,263 @@ const executeEmptyTrash = () => {
                                             @click="
                                                 confirmForceDelete(supplier)
                                             "
+                                            class="inline-flex items-center gap-1 rounded-lg border border-red-200 bg-red-50 px-2.5 py-1 text-xs font-semibold text-red-700 transition-colors hover:bg-red-100 dark:border-red-800/60 dark:bg-red-950/40 dark:text-red-300 dark:hover:bg-red-900/50"
+                                        >
+                                            <svg
+                                                class="h-3.5 w-3.5"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
+                                            >
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    stroke-width="2"
+                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                                                />
+                                            </svg>
+                                            Hapus Permanen
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- Table 12: Customers -->
+                    <table
+                        v-if="
+                            activeTab === 'customers' && items.data.length > 0
+                        "
+                        class="w-full text-start text-sm text-gray-600 dark:text-gray-300"
+                    >
+                        <thead
+                            class="border-b border-gray-200 bg-gray-50/75 text-xs uppercase tracking-wider text-gray-500 dark:border-gray-700/60 dark:bg-gray-700/40 dark:text-gray-400"
+                        >
+                            <tr>
+                                <th
+                                    scope="col"
+                                    class="px-6 py-3.5 font-semibold"
+                                >
+                                    Kode
+                                </th>
+                                <th
+                                    scope="col"
+                                    class="px-6 py-3.5 font-semibold"
+                                >
+                                    Nama Customer
+                                </th>
+                                <th
+                                    scope="col"
+                                    class="px-6 py-3.5 font-semibold"
+                                >
+                                    PIC & Kontak
+                                </th>
+                                <th
+                                    scope="col"
+                                    class="px-6 py-3.5 font-semibold"
+                                >
+                                    Dihapus Pada
+                                </th>
+                                <th
+                                    scope="col"
+                                    class="px-6 py-3.5 text-end font-semibold"
+                                >
+                                    Aksi
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody
+                            class="divide-y divide-gray-200 dark:divide-gray-700/60"
+                        >
+                            <tr
+                                v-for="cust in items.data"
+                                :key="cust.id"
+                                class="transition-colors hover:bg-gray-50/50 dark:hover:bg-gray-700/25"
+                            >
+                                <td
+                                    class="px-6 py-4 font-mono font-bold text-gray-900 dark:text-white"
+                                >
+                                    {{ cust.customer_code }}
+                                </td>
+                                <td
+                                    class="px-6 py-4 font-medium text-gray-900 dark:text-white"
+                                >
+                                    {{ cust.name }}
+                                    <span
+                                        v-if="cust.alias"
+                                        class="ms-1.5 text-xs text-gray-500"
+                                        >({{ cust.alias }})</span
+                                    >
+                                </td>
+                                <td
+                                    class="px-6 py-4 text-xs text-gray-500 dark:text-gray-400"
+                                >
+                                    {{
+                                        cust.contact_person || cust.phone || '-'
+                                    }}
+                                </td>
+                                <td
+                                    class="px-6 py-4 text-xs text-gray-500 dark:text-gray-400"
+                                >
+                                    {{ cust.deleted_at }}
+                                </td>
+                                <td class="px-6 py-4 text-end">
+                                    <div
+                                        class="flex items-center justify-end gap-2"
+                                    >
+                                        <button
+                                            type="button"
+                                            @click="restoreItem(cust)"
+                                            class="inline-flex items-center gap-1 rounded-lg border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 transition-colors hover:bg-emerald-100 dark:border-emerald-800/60 dark:bg-emerald-950/40 dark:text-emerald-300 dark:hover:bg-emerald-900/50"
+                                            title="Pulihkan Customer"
+                                        >
+                                            <svg
+                                                class="h-3.5 w-3.5"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
+                                            >
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    stroke-width="2"
+                                                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                                                />
+                                            </svg>
+                                            Pulihkan
+                                        </button>
+                                        <button
+                                            type="button"
+                                            @click="confirmForceDelete(cust)"
+                                            class="inline-flex items-center gap-1 rounded-lg border border-red-200 bg-red-50 px-2.5 py-1 text-xs font-semibold text-red-700 transition-colors hover:bg-red-100 dark:border-red-800/60 dark:bg-red-950/40 dark:text-red-300 dark:hover:bg-red-900/50"
+                                        >
+                                            <svg
+                                                class="h-3.5 w-3.5"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
+                                            >
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    stroke-width="2"
+                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                                                />
+                                            </svg>
+                                            Hapus Permanen
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- Table 13: Departments -->
+                    <table
+                        v-if="
+                            activeTab === 'departments' && items.data.length > 0
+                        "
+                        class="w-full text-start text-sm text-gray-600 dark:text-gray-300"
+                    >
+                        <thead
+                            class="border-b border-gray-200 bg-gray-50/75 text-xs uppercase tracking-wider text-gray-500 dark:border-gray-700/60 dark:bg-gray-700/40 dark:text-gray-400"
+                        >
+                            <tr>
+                                <th
+                                    scope="col"
+                                    class="px-6 py-3.5 font-semibold"
+                                >
+                                    Kode
+                                </th>
+                                <th
+                                    scope="col"
+                                    class="px-6 py-3.5 font-semibold"
+                                >
+                                    Nama Departemen
+                                </th>
+                                <th
+                                    scope="col"
+                                    class="px-6 py-3.5 font-semibold"
+                                >
+                                    Manager
+                                </th>
+                                <th
+                                    scope="col"
+                                    class="px-6 py-3.5 font-semibold"
+                                >
+                                    Dihapus Pada
+                                </th>
+                                <th
+                                    scope="col"
+                                    class="px-6 py-3.5 text-end font-semibold"
+                                >
+                                    Aksi
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody
+                            class="divide-y divide-gray-200 dark:divide-gray-700/60"
+                        >
+                            <tr
+                                v-for="dept in items.data"
+                                :key="dept.id"
+                                class="transition-colors hover:bg-gray-50/50 dark:hover:bg-gray-700/25"
+                            >
+                                <td
+                                    class="px-6 py-4 font-mono font-bold text-gray-900 dark:text-white"
+                                >
+                                    {{ dept.code }}
+                                </td>
+                                <td
+                                    class="px-6 py-4 font-medium text-gray-900 dark:text-white"
+                                >
+                                    {{ dept.name }}
+                                </td>
+                                <td
+                                    class="px-6 py-4 text-xs text-gray-500 dark:text-gray-400"
+                                >
+                                    {{
+                                        dept.manager?.name || 'Belum Ditetapkan'
+                                    }}
+                                </td>
+                                <td
+                                    class="px-6 py-4 text-xs text-gray-500 dark:text-gray-400"
+                                >
+                                    {{ dept.deleted_at }}
+                                </td>
+                                <td class="px-6 py-4 text-end">
+                                    <div
+                                        class="flex items-center justify-end gap-2"
+                                    >
+                                        <button
+                                            type="button"
+                                            @click="restoreItem(dept)"
+                                            class="inline-flex items-center gap-1 rounded-lg border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 transition-colors hover:bg-emerald-100 dark:border-emerald-800/60 dark:bg-emerald-950/40 dark:text-emerald-300 dark:hover:bg-emerald-900/50"
+                                            title="Pulihkan Departemen"
+                                        >
+                                            <svg
+                                                class="h-3.5 w-3.5"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
+                                            >
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    stroke-width="2"
+                                                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                                                />
+                                            </svg>
+                                            Pulihkan
+                                        </button>
+                                        <button
+                                            type="button"
+                                            @click="confirmForceDelete(dept)"
                                             class="inline-flex items-center gap-1 rounded-lg border border-red-200 bg-red-50 px-2.5 py-1 text-xs font-semibold text-red-700 transition-colors hover:bg-red-100 dark:border-red-800/60 dark:bg-red-950/40 dark:text-red-300 dark:hover:bg-red-900/50"
                                         >
                                             <svg

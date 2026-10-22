@@ -65,7 +65,11 @@ const formatDateTimeIndo = (dtStr) => {
         :show="show"
         @close="$emit('close')"
         title="Atur Status Hari Kalender"
-        :subtitle="activeDay ? `${activeDay.day_name}, ${formatDateIndo(activeDay.date)}` : ''"
+        :subtitle="
+            activeDay
+                ? `${activeDay.day_name}, ${formatDateIndo(activeDay.date)}`
+                : ''
+        "
         max-width="lg"
     >
         <form @submit.prevent="$emit('submit')" class="space-y-4">
@@ -91,10 +95,14 @@ const formatDateTimeIndo = (dtStr) => {
                             class="h-4 w-4 text-emerald-600 focus:ring-emerald-500"
                         />
                         <div>
-                            <span class="block text-xs font-bold text-slate-900 dark:text-white">
+                            <span
+                                class="block text-xs font-bold text-slate-900 dark:text-white"
+                            >
                                 Hari Kerja
                             </span>
-                            <span class="block text-[11px] text-slate-500 dark:text-slate-400">
+                            <span
+                                class="block text-[11px] text-slate-500 dark:text-slate-400"
+                            >
                                 Operasional aktif normal
                             </span>
                         </div>
@@ -115,10 +123,14 @@ const formatDateTimeIndo = (dtStr) => {
                             class="h-4 w-4 text-rose-600 focus:ring-rose-500"
                         />
                         <div>
-                            <span class="block text-xs font-bold text-rose-600 dark:text-rose-400">
+                            <span
+                                class="block text-xs font-bold text-rose-600 dark:text-rose-400"
+                            >
                                 Hari Libur
                             </span>
-                            <span class="block text-[11px] text-slate-500 dark:text-slate-400">
+                            <span
+                                class="block text-[11px] text-slate-500 dark:text-slate-400"
+                            >
                                 Libur / cuti / akhir pekan
                             </span>
                         </div>
@@ -140,7 +152,8 @@ const formatDateTimeIndo = (dtStr) => {
                     placeholder="Contoh: Libur Cuti Bersama Perusahaan, Hari Pengganti Lembur, dll."
                 />
                 <p class="mt-1 text-[11px] text-slate-500 dark:text-slate-400">
-                    Opsional untuk hari kerja biasa, sangat disarankan bila ditetapkan sebagai libur khusus.
+                    Opsional untuk hari kerja biasa, sangat disarankan bila
+                    ditetapkan sebagai libur khusus.
                 </p>
             </div>
 
@@ -150,13 +163,22 @@ const formatDateTimeIndo = (dtStr) => {
                 class="rounded-xl border border-amber-200 bg-amber-50/80 p-3 text-xs dark:border-amber-800/50 dark:bg-amber-950/30"
             >
                 <div class="flex items-start gap-2.5">
-                    <Icon name="info" class="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
-                    <div class="space-y-0.5 text-[11px] text-amber-900 dark:text-amber-200">
+                    <Icon
+                        name="info"
+                        class="mt-0.5 h-4 w-4 shrink-0 text-amber-600"
+                    />
+                    <div
+                        class="space-y-0.5 text-[11px] text-amber-900 dark:text-amber-200"
+                    >
                         <p>
                             Terakhir diubah oleh:
-                            <strong class="font-bold">{{ activeDay.updater.name }}</strong>
+                            <strong class="font-bold">{{
+                                activeDay.updater.name
+                            }}</strong>
                         </p>
-                        <p class="text-[10px] text-amber-600 dark:text-amber-400">
+                        <p
+                            class="text-[10px] text-amber-600 dark:text-amber-400"
+                        >
                             Pada: {{ formatDateTimeIndo(activeDay.updated_at) }}
                         </p>
                     </div>

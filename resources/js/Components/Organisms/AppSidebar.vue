@@ -40,10 +40,23 @@ const hasRole = (role) => {
     return roles.value.includes(role);
 };
 
+const hasRecycleBinAccess = computed(() => {
+    if (isSuperadmin.value) return true;
+    if (permissions.value.includes('recycle_bin.view')) return true;
+    return permissions.value.some(
+        (p) => p.endsWith('.restore') || p.endsWith('.force_delete'),
+    );
+});
+
 // Route check helpers - Master
+const isOrganizationActive = computed(() => {
+    return route().current('departments.*');
+});
+
 const isProcurementActive = computed(() => {
     return (
         route().current('suppliers.*') ||
+        route().current('customers.*') ||
         route().current('term-of-payments.*')
     );
 });
@@ -70,6 +83,7 @@ const isSupportingActive = computed(() => {
 
 const isMasterActive = computed(() => {
     return (
+        isOrganizationActive.value ||
         isProcurementActive.value ||
         isFinanceActive.value ||
         isOperationsActive.value ||
@@ -88,8 +102,7 @@ const isGovernanceActive = computed(() => {
 
 const isAuditActive = computed(() => {
     return (
-        route().current('activity-logs.*') ||
-        route().current('recycle-bin.*')
+        route().current('activity-logs.*') || route().current('recycle-bin.*')
     );
 });
 
@@ -100,6 +113,7 @@ const isMiscellaneousActive = computed(() => {
 // Accordion open/collapse states
 const openMenus = reactive({
     master: false,
+    organization: false,
     procurement: false,
     finance: false,
     operations: false,
@@ -112,6 +126,7 @@ const openMenus = reactive({
 // Auto-expand active groups based on active route
 const syncOpenMenusWithRoute = () => {
     if (isMasterActive.value) openMenus.master = true;
+    if (isOrganizationActive.value) openMenus.organization = true;
     if (isProcurementActive.value) openMenus.procurement = true;
     if (isFinanceActive.value) openMenus.finance = true;
     if (isOperationsActive.value) openMenus.operations = true;
@@ -144,6 +159,22 @@ const menuStructure = computed(() => {
             active: isMasterActive.value,
             groups: [
                 {
+                    key: 'organization',
+                    title: 'Struktur Organisasi',
+                    icon: 'building',
+                    active: isOrganizationActive.value,
+                    children: [
+                        {
+                            title: 'Master Departemen',
+                            href: route('departments.index'),
+                            active: route().current('departments.*'),
+                            permission: 'departments.view',
+                        },
+                    ].filter(
+                        (item) => can(item.permission) && hasRole(item.role),
+                    ),
+                },
+                {
                     key: 'procurement',
                     title: 'Pengadaan & Rekanan',
                     icon: 'truck',
@@ -156,12 +187,20 @@ const menuStructure = computed(() => {
                             permission: 'suppliers.view',
                         },
                         {
+                            title: 'Master Customer',
+                            href: route('customers.index'),
+                            active: route().current('customers.*'),
+                            permission: 'customers.view',
+                        },
+                        {
                             title: 'Term of Payment (TOP)',
                             href: route('term-of-payments.index'),
                             active: route().current('term-of-payments.*'),
                             permission: 'term_of_payments.view',
                         },
-                    ].filter((item) => can(item.permission) && hasRole(item.role)),
+                    ].filter(
+                        (item) => can(item.permission) && hasRole(item.role),
+                    ),
                 },
                 {
                     key: 'finance',
@@ -193,7 +232,9 @@ const menuStructure = computed(() => {
                             active: route().current('currencies.*'),
                             permission: 'currencies.view',
                         },
-                    ].filter((item) => can(item.permission) && hasRole(item.role)),
+                    ].filter(
+                        (item) => can(item.permission) && hasRole(item.role),
+                    ),
                 },
                 {
                     key: 'operations',
@@ -207,7 +248,9 @@ const menuStructure = computed(() => {
                             active: route().current('calendar.*'),
                             permission: 'calendar.view',
                         },
-                    ].filter((item) => can(item.permission) && hasRole(item.role)),
+                    ].filter(
+                        (item) => can(item.permission) && hasRole(item.role),
+                    ),
                 },
                 {
                     key: 'supporting',
@@ -227,7 +270,9 @@ const menuStructure = computed(() => {
                             active: route().current('budget-classifications.*'),
                             permission: 'budget_classifications.view',
                         },
-                    ].filter((item) => can(item.permission) && hasRole(item.role)),
+                    ].filter(
+                        (item) => can(item.permission) && hasRole(item.role),
+                    ),
                 },
             ].filter((group) => group.children.length > 0),
         },
@@ -260,7 +305,9 @@ const menuStructure = computed(() => {
                             active: route().current('permissions.*'),
                             permission: 'permissions.view',
                         },
-                    ].filter((item) => can(item.permission) && hasRole(item.role)),
+                    ].filter(
+                        (item) => can(item.permission) && hasRole(item.role),
+                    ),
                 },
                 {
                     key: 'audit',
@@ -278,9 +325,11 @@ const menuStructure = computed(() => {
                             title: 'Tempat Sampah',
                             href: route('recycle-bin.index'),
                             active: route().current('recycle-bin.*'),
-                            role: 'Superadmin',
+                            customCheck: hasRecycleBinAccess.value,
                         },
-                    ].filter((item) => can(item.permission) && hasRole(item.role)),
+                    ].filter(
+                        (item) => item.customCheck !== undefined ? item.customCheck : (can(item.permission) && hasRole(item.role)),
+                    ),
                 },
             ].filter((group) => group.children.length > 0),
         },
@@ -358,12 +407,12 @@ const dropdownSections = computed(() => {
                         <span
                             class="text-sm font-bold tracking-tight text-slate-900 dark:text-white"
                         >
-                            PT. Mandiri Jaya
+                            PT. Hiruta Kogyo Indonesia
                         </span>
                         <span
                             class="text-[10px] font-semibold uppercase tracking-wider text-blue-600 dark:text-blue-400"
                         >
-                            Enterprise ERP &bull; HQ
+                            Enterprise ERP
                         </span>
                     </div>
                 </Link>
@@ -444,14 +493,20 @@ const dropdownSections = computed(() => {
                                             : 'text-slate-400 group-hover:text-slate-700 dark:text-slate-400 dark:group-hover:text-slate-200',
                                     ]"
                                 >
-                                    <Icon :name="section.dropdown.icon" class="h-4.5 w-4.5" />
+                                    <Icon
+                                        :name="section.dropdown.icon"
+                                        class="h-4.5 w-4.5"
+                                    />
                                 </span>
                                 <span>{{ section.dropdown.title }}</span>
                             </div>
 
                             <div class="flex items-center gap-1.5">
                                 <span
-                                    v-if="section.dropdown.active && !openMenus[section.key]"
+                                    v-if="
+                                        section.dropdown.active &&
+                                        !openMenus[section.key]
+                                    "
                                     class="h-1.5 w-1.5 rounded-full bg-blue-600 dark:bg-blue-400"
                                 />
                                 <Icon
@@ -469,7 +524,7 @@ const dropdownSections = computed(() => {
                         <!-- Level 2 Sub-dropdowns Container -->
                         <div
                             v-show="openMenus[section.key]"
-                            class="ms-3.5 space-y-1 border-s border-slate-200/80 ps-2.5 my-1.5 dark:border-slate-800"
+                            class="my-1.5 ms-3.5 space-y-1 border-s border-slate-200/80 ps-2.5 dark:border-slate-800"
                         >
                             <div
                                 v-for="group in section.dropdown.groups"
@@ -487,7 +542,9 @@ const dropdownSections = computed(() => {
                                             : 'text-slate-600 hover:bg-slate-100/70 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800/50 dark:hover:text-slate-200',
                                     ]"
                                 >
-                                    <div class="flex items-center gap-2 truncate">
+                                    <div
+                                        class="flex items-center gap-2 truncate"
+                                    >
                                         <Icon
                                             :name="group.icon"
                                             :class="[
@@ -497,7 +554,9 @@ const dropdownSections = computed(() => {
                                                     : 'text-slate-400 group-hover:text-slate-600 dark:text-slate-500 dark:group-hover:text-slate-300',
                                             ]"
                                         />
-                                        <span class="truncate">{{ group.title }}</span>
+                                        <span class="truncate">{{
+                                            group.title
+                                        }}</span>
                                     </div>
                                     <Icon
                                         name="chevron-down"
@@ -513,7 +572,7 @@ const dropdownSections = computed(() => {
                                 <!-- Level 3 Children Links -->
                                 <div
                                     v-show="openMenus[group.key]"
-                                    class="ms-2.5 space-y-0.5 border-s border-slate-200/60 ps-2 my-1 dark:border-slate-800/80"
+                                    class="my-1 ms-2.5 space-y-0.5 border-s border-slate-200/60 ps-2 dark:border-slate-800/80"
                                 >
                                     <Link
                                         v-for="child in group.children"
@@ -522,7 +581,7 @@ const dropdownSections = computed(() => {
                                         :class="[
                                             'group flex items-center gap-2 rounded-md px-2 py-1.5 text-xs font-medium transition-all duration-150',
                                             child.active
-                                                ? 'border border-blue-200/70 bg-blue-50/90 font-semibold text-blue-700 shadow-2xs dark:border-blue-900/40 dark:bg-blue-950/70 dark:text-blue-300'
+                                                ? 'shadow-2xs border border-blue-200/70 bg-blue-50/90 font-semibold text-blue-700 dark:border-blue-900/40 dark:bg-blue-950/70 dark:text-blue-300'
                                                 : 'border border-transparent text-slate-600 hover:bg-slate-100/60 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800/40 dark:hover:text-slate-200',
                                         ]"
                                     >
@@ -534,7 +593,9 @@ const dropdownSections = computed(() => {
                                                     : 'bg-slate-300 group-hover:bg-slate-400 dark:bg-slate-600 dark:group-hover:bg-slate-500',
                                             ]"
                                         />
-                                        <span class="truncate">{{ child.title }}</span>
+                                        <span class="truncate">{{
+                                            child.title
+                                        }}</span>
                                     </Link>
                                 </div>
                             </div>
@@ -542,7 +603,7 @@ const dropdownSections = computed(() => {
                     </div>
 
                     <!-- DESKTOP COLLAPSED: COMPACT ICON WITH HOVER FLYOUT -->
-                    <div v-else class="relative group">
+                    <div v-else class="group relative">
                         <button
                             type="button"
                             :class="[
@@ -553,7 +614,10 @@ const dropdownSections = computed(() => {
                             ]"
                             :title="section.dropdown.title"
                         >
-                            <Icon :name="section.dropdown.icon" class="h-5 w-5" />
+                            <Icon
+                                :name="section.dropdown.icon"
+                                class="h-5 w-5"
+                            />
                             <span
                                 v-if="section.dropdown.active"
                                 class="absolute -start-1 top-1/2 h-6 w-1 -translate-y-1/2 rounded-r-full bg-blue-600 dark:bg-blue-400"
@@ -567,7 +631,9 @@ const dropdownSections = computed(() => {
                             <div
                                 class="mb-2 flex items-center justify-between border-b border-slate-100 px-1 pb-1.5 dark:border-slate-800"
                             >
-                                <span class="text-xs font-bold text-slate-900 dark:text-white">
+                                <span
+                                    class="text-xs font-bold text-slate-900 dark:text-white"
+                                >
                                     {{ section.dropdown.title }}
                                 </span>
                                 <span
@@ -585,7 +651,10 @@ const dropdownSections = computed(() => {
                                 <div
                                     class="flex items-center gap-1.5 px-1 py-1 text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500"
                                 >
-                                    <Icon :name="group.icon" class="h-3.5 w-3.5" />
+                                    <Icon
+                                        :name="group.icon"
+                                        class="h-3.5 w-3.5"
+                                    />
                                     <span>{{ group.title }}</span>
                                 </div>
                                 <div class="mt-0.5 space-y-0.5">
@@ -608,7 +677,9 @@ const dropdownSections = computed(() => {
                                                     : 'bg-slate-300 dark:bg-slate-600',
                                             ]"
                                         />
-                                        <span class="truncate">{{ child.title }}</span>
+                                        <span class="truncate">{{
+                                            child.title
+                                        }}</span>
                                     </Link>
                                 </div>
                             </div>

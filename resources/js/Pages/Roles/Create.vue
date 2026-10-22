@@ -164,10 +164,9 @@ const submit = () => {
                         >
                             Centang izin yang ingin diberikan ke peran ini.
                             Terpilih:
-                            <strong
-                                class="text-blue-600 dark:text-blue-400"
-                                >{{ form.permissions.length }}</strong
-                            >
+                            <strong class="text-blue-600 dark:text-blue-400">{{
+                                form.permissions.length
+                            }}</strong>
                             dari {{ permissions.length }} izin.
                         </p>
                     </div>

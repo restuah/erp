@@ -78,10 +78,18 @@ class Currency extends Model
     /**
      * Relasi ke riwayat kurs mata uang.
      */
-     public function rates(): HasMany
-     {
-         return $this->hasMany(ExchangeRate::class, 'currency_id');
-     }
+    public function rates(): HasMany
+    {
+        return $this->hasMany(ExchangeRate::class, 'currency_id');
+    }
+
+    /**
+     * Relasi ke daftar customer dengan mata uang default ini.
+     */
+    public function customers(): HasMany
+    {
+        return $this->hasMany(Customer::class, 'currency_id');
+    }
 
     /**
      * Record title for LogsActivity trait.

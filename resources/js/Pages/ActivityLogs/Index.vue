@@ -290,7 +290,9 @@ const getEventLabel = (event) => {
             <div
                 class="shadow-xs rounded-xl border border-gray-200 bg-white p-4 transition-all dark:border-gray-700/60 dark:bg-gray-800"
             >
-                <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
+                <div
+                    class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5"
+                >
                     <!-- Search Input -->
                     <div class="relative sm:col-span-2 lg:col-span-2">
                         <div
@@ -728,7 +730,7 @@ const getEventLabel = (event) => {
                             :class="
                                 clearDays === '30'
                                     ? 'border-blue-500 bg-blue-50/40 dark:bg-blue-950/30'
-                                    : 'border-gray-200 hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-750'
+                                    : 'dark:hover:bg-gray-750 border-gray-200 hover:bg-gray-50 dark:border-gray-700'
                             "
                         >
                             <div class="flex items-center gap-3">
@@ -751,7 +753,7 @@ const getEventLabel = (event) => {
                             :class="
                                 clearDays === '60'
                                     ? 'border-blue-500 bg-blue-50/40 dark:bg-blue-950/30'
-                                    : 'border-gray-200 hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-750'
+                                    : 'dark:hover:bg-gray-750 border-gray-200 hover:bg-gray-50 dark:border-gray-700'
                             "
                         >
                             <div class="flex items-center gap-3">
@@ -774,7 +776,7 @@ const getEventLabel = (event) => {
                             :class="
                                 clearDays === '90'
                                     ? 'border-blue-500 bg-blue-50/40 dark:bg-blue-950/30'
-                                    : 'border-gray-200 hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-750'
+                                    : 'dark:hover:bg-gray-750 border-gray-200 hover:bg-gray-50 dark:border-gray-700'
                             "
                         >
                             <div class="flex items-center gap-3">

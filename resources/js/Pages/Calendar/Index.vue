@@ -336,7 +336,10 @@ const formatDateTimeIndo = (dtStr) => {
                             title="Kembalikan hari ke default kerja & libur"
                         >
                             <template #icon-left>
-                                <Icon name="refresh" class="h-4 w-4 text-slate-400" />
+                                <Icon
+                                    name="refresh"
+                                    class="h-4 w-4 text-slate-400"
+                                />
                             </template>
                             <span>Reset Default</span>
                         </Button>

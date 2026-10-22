@@ -32,6 +32,7 @@ class Budget extends Model
         'code',
         'name',
         'budget_classification_id',
+        'department_id',
         'pic_id',
         'description',
         'is_active',
@@ -70,6 +71,14 @@ class Budget extends Model
     public function classification(): BelongsTo
     {
         return $this->belongsTo(BudgetClassification::class, 'budget_classification_id');
+    }
+
+    /**
+     * Relasi ke departemen pemilik/pengendali anggaran.
+     */
+    public function department(): BelongsTo
+    {
+        return $this->belongsTo(Department::class, 'department_id');
     }
 
     /**

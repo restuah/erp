@@ -173,10 +173,9 @@ const submit = () => {
                             class="mt-0.5 text-xs text-gray-500 dark:text-gray-400"
                         >
                             Terpilih:
-                            <strong
-                                class="text-blue-600 dark:text-blue-400"
-                                >{{ form.permissions.length }}</strong
-                            >
+                            <strong class="text-blue-600 dark:text-blue-400">{{
+                                form.permissions.length
+                            }}</strong>
                             dari {{ permissions.length }} izin.
                         </p>
                     </div>

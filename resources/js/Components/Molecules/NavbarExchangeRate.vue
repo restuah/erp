@@ -215,8 +215,7 @@ const handleSync = () => {
             <svg
                 class="h-3.5 w-3.5 transition-transform duration-300"
                 :class="{
-                    'animate-spin text-blue-600 dark:text-blue-400':
-                        isSyncing,
+                    'animate-spin text-blue-600 dark:text-blue-400': isSyncing,
                     'group-hover:rotate-45': !isSyncing,
                 }"
                 xmlns="http://www.w3.org/2000/svg"

@@ -119,7 +119,7 @@ class DashboardController extends Controller
             'recent_activities' => $recentActivities,
             'recent_suppliers' => $recentSuppliers,
             'system_info' => [
-                'company_name' => 'PT. Mandiri Jaya Utama',
+                'company_name' => 'PT. Hiruta Kogyo Indonesia',
                 'branch' => 'Kantor Pusat (HQ)',
                 'environment' => config('app.env', 'production'),
                 'timezone' => 'Asia/Jakarta (WIB)',

@@ -119,3 +119,101 @@ test('superadmin can empty trash in a category', function () {
     expect(User::onlyTrashed()->count())->toBe(0);
     expect(User::withTrashed()->count())->toBe(1); // only superadmin remains
 });
+
+test('superadmin can restore all and empty customers category in recycle bin', function () {
+    $superadmin = User::factory()->create();
+    $role = Role::create(['name' => 'Superadmin', 'guard_name' => 'web']);
+    $superadmin->assignRole($role);
+
+    $customer1 = \App\Models\Customer::create(['customer_code' => 'CUST-0001', 'name' => 'Customer 1']);
+    $customer2 = \App\Models\Customer::create(['customer_code' => 'CUST-0002', 'name' => 'Customer 2']);
+    $customer1->delete();
+    $customer2->delete();
+
+    expect(\App\Models\Customer::onlyTrashed()->count())->toBe(2);
+
+    $this->actingAs($superadmin)->post(
+        route('recycle-bin.restore-all', ['type' => 'customers'])
+    )->assertRedirect();
+
+    expect(\App\Models\Customer::onlyTrashed()->count())->toBe(0);
+    expect(\App\Models\Customer::count())->toBe(2);
+
+    $customer1->delete();
+    $customer2->delete();
+
+    $this->actingAs($superadmin)->delete(
+        route('recycle-bin.empty', ['type' => 'customers'])
+    )->assertRedirect();
+
+    expect(\App\Models\Customer::withTrashed()->count())->toBe(0);
+});
+
+test('user with module restore permission can restore but cannot force delete', function () {
+    $this->seed(\Database\Seeders\RolePermissionSeeder::class);
+
+    $deptManager = User::factory()->create();
+    $deptManager->givePermissionTo('departments.restore');
+
+    $dept = \App\Models\Department::create([
+        'code' => 'TEST_DEPT',
+        'name' => 'Test Department',
+        'is_active' => true,
+    ]);
+    $dept->delete();
+
+    expect(\App\Models\Department::onlyTrashed()->count())->toBe(1);
+
+    // Can access recycle bin and see departments
+    $indexRes = $this->actingAs($deptManager)->get(route('recycle-bin.index', ['type' => 'departments']));
+    $indexRes->assertOk();
+
+    // Can restore
+    $restoreRes = $this->actingAs($deptManager)->post(
+        route('recycle-bin.restore', ['type' => 'departments', 'id' => $dept->id])
+    );
+    $restoreRes->assertRedirect();
+    expect(\App\Models\Department::onlyTrashed()->count())->toBe(0);
+
+    // Soft delete again
+    $dept->delete();
+
+    // Cannot force delete without departments.force_delete
+    $forceDelRes = $this->actingAs($deptManager)->delete(
+        route('recycle-bin.force-delete', ['type' => 'departments', 'id' => $dept->id])
+    );
+    $forceDelRes->assertForbidden();
+
+    // Cannot empty trash without departments.force_delete
+    $emptyRes = $this->actingAs($deptManager)->delete(
+        route('recycle-bin.empty', ['type' => 'departments'])
+    );
+    $emptyRes->assertForbidden();
+});
+
+test('user with module force_delete permission can permanently delete but cannot restore', function () {
+    $this->seed(\Database\Seeders\RolePermissionSeeder::class);
+
+    $custManager = User::factory()->create();
+    $custManager->givePermissionTo('customers.force_delete');
+
+    $cust = \App\Models\Customer::create([
+        'customer_code' => 'CUST-PERM',
+        'name' => 'Permanent Test Customer',
+    ]);
+    $cust->delete();
+
+    // Cannot restore without customers.restore
+    $restoreRes = $this->actingAs($custManager)->post(
+        route('recycle-bin.restore', ['type' => 'customers', 'id' => $cust->id])
+    );
+    $restoreRes->assertForbidden();
+
+    // Can force delete
+    $forceDelRes = $this->actingAs($custManager)->delete(
+        route('recycle-bin.force-delete', ['type' => 'customers', 'id' => $cust->id])
+    );
+    $forceDelRes->assertRedirect();
+    expect(\App\Models\Customer::withTrashed()->find($cust->id))->toBeNull();
+});
+

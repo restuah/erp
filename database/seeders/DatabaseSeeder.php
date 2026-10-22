@@ -27,7 +27,18 @@ class DatabaseSeeder extends Seeder
         );
         $superadmin->assignRole('Superadmin');
 
-        // 3. Create Regular User
+        // 3. Create Administrator User
+        $admin = User::firstOrCreate(
+            ['email' => 'admin@erp.test'],
+            [
+                'name' => 'Administrator',
+                'password' => Hash::make('password'),
+                'email_verified_at' => now(),
+            ]
+        );
+        $admin->assignRole('Admin');
+
+        // 4. Create Regular User
         $user = User::firstOrCreate(
             ['email' => 'user@erp.test'],
             [
@@ -52,5 +63,11 @@ class DatabaseSeeder extends Seeder
 
         // 8. Seed Master Suppliers
         $this->call(SupplierSeeder::class);
+
+        // 9. Seed Master Departments
+        $this->call(DepartmentSeeder::class);
+
+        // 10. Seed Master Customers
+        $this->call(CustomerSeeder::class);
     }
 }
